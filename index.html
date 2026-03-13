@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>محاسب الشباب · منصة الفواتير</title>
+    <title>محاسب الشباب · منصة الفواتير المتكاملة</title>
     <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Chart.js للرسوم البيانية -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
             margin: 0;
@@ -17,41 +19,47 @@
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap');
 
         :root {
-            /* اللون الأسود والأبيض مع لمسة ذهبية */
-            --bg-gradient-light: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-            --bg-body-light: #f5f5f5;
+            /* Light Theme - أسود وأبيض مع ذهبي */
+            --bg-gradient-light: linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%);
+            --bg-body-light: #f8f9fa;
             --bg-card-light: #ffffff;
             --text-primary-light: #1a1a1a;
             --text-secondary-light: #4a4a4a;
-            --text-muted-light: #6b6b6b;
-            --border-light: #e0e0e0;
+            --text-muted-light: #6c757d;
+            --border-light: #dee2e6;
             --accent-light: #d4af37;
             --accent-hover-light: #c5a028;
             --danger-light: #dc3545;
             --success-light: #28a745;
             --warning-light: #ffc107;
+            --info-light: #17a2b8;
             --input-bg-light: #ffffff;
             --shadow-light: 0 10px 40px rgba(0, 0, 0, 0.1);
-            --row-paid-light: #e8f5e9;
-            --row-pending-light: #fff3e0;
+            --row-paid-light: #d4edda;
+            --row-pending-light: #fff3cd;
+            --icon-light: #1a1a1a;
+            --icon-hover-light: #d4af37;
             
             /* Dark Theme */
-            --bg-gradient-dark: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+            --bg-gradient-dark: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
             --bg-body-dark: #121212;
             --bg-card-dark: #1e1e1e;
             --text-primary-dark: #ffffff;
             --text-secondary-dark: #e0e0e0;
-            --text-muted-dark: #a0a0a0;
-            --border-dark: #333333;
+            --text-muted-dark: #adb5bd;
+            --border-dark: #495057;
             --accent-dark: #d4af37;
             --accent-hover-dark: #e5c158;
             --danger-dark: #ff6b6b;
             --success-dark: #51cf66;
             --warning-dark: #ffd43b;
+            --info-dark: #5fa8d3;
             --input-bg-dark: #2d2d2d;
             --shadow-dark: 0 10px 40px rgba(0, 0, 0, 0.5);
             --row-paid-dark: #1e3a2e;
             --row-pending-dark: #4a3b1a;
+            --icon-dark: #ffffff;
+            --icon-hover-dark: #d4af37;
         }
 
         html[data-theme="light"] {
@@ -67,10 +75,13 @@
             --danger: var(--danger-light);
             --success: var(--success-light);
             --warning: var(--warning-light);
+            --info: var(--info-light);
             --input-bg: var(--input-bg-light);
             --shadow: var(--shadow-light);
             --row-paid: var(--row-paid-light);
             --row-pending: var(--row-pending-light);
+            --icon: var(--icon-light);
+            --icon-hover: var(--icon-hover-light);
         }
 
         html[data-theme="dark"] {
@@ -86,10 +97,13 @@
             --danger: var(--danger-dark);
             --success: var(--success-dark);
             --warning: var(--warning-dark);
+            --info: var(--info-dark);
             --input-bg: var(--input-bg-dark);
             --shadow: var(--shadow-dark);
             --row-paid: var(--row-paid-dark);
             --row-pending: var(--row-pending-dark);
+            --icon: var(--icon-dark);
+            --icon-hover: var(--icon-hover-dark);
         }
 
         body {
@@ -98,7 +112,6 @@
             min-height: 100vh;
             padding: 1rem;
             direction: rtl;
-            backdrop-filter: blur(10px);
             transition: all 0.3s ease;
         }
 
@@ -107,7 +120,7 @@
         }
 
         .container {
-            max-width: 1600px;
+            max-width: 1800px;
             margin: 0 auto;
         }
 
@@ -241,6 +254,17 @@
             gap: 1rem;
         }
 
+        .date-time {
+            background: var(--accent);
+            color: black;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
         .btn {
             background: transparent;
             border: 2px solid var(--border);
@@ -274,7 +298,48 @@
             opacity: 0.9;
         }
 
-        /* قسم المساعد الذكي */
+        .btn-success {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        .btn-info {
+            background: var(--info);
+            border-color: var(--info);
+            color: white;
+        }
+
+        /* قسم الكاشير */
+        .cashier-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(212, 175, 55, 0.1);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            border: 2px solid var(--border);
+        }
+
+        .cashier-section select {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-weight: 700;
+            font-size: 1rem;
+            padding: 0.3rem 1rem;
+            cursor: pointer;
+        }
+
+        .cashier-section select:focus {
+            outline: none;
+        }
+
+        .cashier-section i {
+            color: var(--icon);
+        }
+
+        /* المساعد الذكي */
         .assistant-section {
             background: var(--bg-card);
             border-radius: 30px;
@@ -347,32 +412,48 @@
             display: none;
         }
 
-        /* الصبية */
-        .girl-section {
+        /* شريط التصفية والأرشيف */
+        .filter-bar {
+            background: var(--bg-card);
+            border-radius: 30px;
+            padding: 1rem 2rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border);
             display: flex;
+            flex-wrap: wrap;
             align-items: center;
             gap: 1rem;
-            background: rgba(212, 175, 55, 0.1);
-            padding: 0.5rem 1.5rem;
-            border-radius: 50px;
-            border: 2px solid var(--border);
         }
 
-        .girl-section select {
+        .filter-btn {
             background: transparent;
-            border: none;
+            border: 2px solid var(--border);
+            border-radius: 50px;
+            padding: 0.5rem 1.2rem;
             color: var(--text-primary);
-            font-weight: 700;
-            font-size: 1rem;
-            padding: 0.3rem 1rem;
             cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
         }
 
-        .girl-section select:focus {
-            outline: none;
+        .filter-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: black;
         }
 
-        /* الإحصائيات */
+        .month-selector {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(212, 175, 55, 0.1);
+            padding: 0.3rem 1rem;
+            border-radius: 50px;
+        }
+
+        /* شريط الإحصائيات */
         .stats-bar {
             background: var(--bg-card);
             border-radius: 30px;
@@ -390,6 +471,10 @@
             align-items: center;
             gap: 0.8rem;
             font-size: 1rem;
+        }
+
+        .stat-item i {
+            color: var(--icon);
         }
 
         .stat-badge {
@@ -410,7 +495,7 @@
             width: 120px;
         }
 
-        /* البحث والإضافة */
+        /* شريط البحث */
         .search-row {
             display: flex;
             flex-wrap: wrap;
@@ -442,6 +527,10 @@
             outline: none;
         }
 
+        .search-box i {
+            color: var(--icon);
+        }
+
         /* الجدول */
         .table-wrapper {
             background: var(--bg-card);
@@ -455,7 +544,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 1300px;
+            min-width: 1400px;
         }
 
         th {
@@ -491,7 +580,7 @@
             appearance: textfield;
         }
 
-        select, input[type="text"], input[type="number"] {
+        select, input[type="text"], input[type="number"], input[type="date"] {
             background: var(--input-bg);
             border: 2px solid var(--border);
             border-radius: 15px;
@@ -537,6 +626,14 @@
             color: white;
         }
 
+        .btn-icon i {
+            color: var(--icon);
+        }
+
+        .btn-icon:hover i {
+            color: white;
+        }
+
         /* قسم التسليم */
         .handover-section {
             background: var(--bg-card);
@@ -562,12 +659,102 @@
             }
         }
 
+        /* نافذة الإحصائيات المتقدمة */
+        .advanced-stats-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            display: none;
+        }
+
+        .stats-content {
+            background: var(--bg-card);
+            border-radius: 40px;
+            padding: 2rem;
+            max-width: 90%;
+            width: 1200px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 2px solid var(--accent);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 30px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .stat-card i {
+            font-size: 2rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .stat-card h3 {
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--accent);
+        }
+
+        .chart-container {
+            height: 300px;
+            margin: 2rem 0;
+        }
+
+        /* نافذة الخضرة */
+        .vegetable-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            display: none;
+        }
+
+        .vegetable-content {
+            background: var(--bg-card);
+            border-radius: 40px;
+            padding: 2rem;
+            max-width: 90%;
+            width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 2px solid var(--success);
+        }
+
         /* تحسينات للغة الإنجليزية */
         html[data-lang="en"] th,
         html[data-lang="en"] td,
         html[data-lang="en"] .btn,
         html[data-lang="en"] .stat-item,
-        html[data-lang="en"] .girl-section select,
+        html[data-lang="en"] .cashier-section select,
         html[data-lang="en"] .assistant-input {
             text-align: left;
             direction: ltr;
@@ -581,6 +768,7 @@
             .top-bar { flex-direction: column; align-items: flex-start; }
             .login-card { padding: 2rem 1.5rem; }
             .assistant-section { padding: 1rem; }
+            .filter-bar { flex-direction: column; align-items: flex-start; }
         }
     </style>
 </head>
@@ -593,7 +781,7 @@
             <div class="login-header">
                 <i class="fas fa-calculator"></i>
                 <h2 data-lang-ar="محاسب الشباب" data-lang-en="Alshabab Accountant">محاسب الشباب</h2>
-                <p data-lang-ar="منصة الفواتير الذكية" data-lang-en="Smart Invoicing Platform">منصة الفواتير الذكية</p>
+                <p data-lang-ar="منصة الفواتير المتكاملة" data-lang-en="Integrated Invoicing Platform">منصة الفواتير المتكاملة</p>
             </div>
             
             <div class="input-group">
@@ -621,21 +809,29 @@
     <!-- لوحة العمل الرئيسية -->
     <div id="mainDashboard" style="display: none;">
 
-        <!-- الشريط العلوي -->
+        <!-- الشريط العلوي مع التاريخ والوقت -->
         <div class="glass-card top-bar">
+            <div class="date-time" id="dateTimeDisplay">
+                <i class="fas fa-calendar-alt"></i>
+                <span id="currentDate"></span>
+                <i class="fas fa-clock" style="margin-right: 1rem;"></i>
+                <span id="currentTime"></span>
+            </div>
+
             <div style="display: flex; gap: 0.5rem;">
                 <button class="btn" id="themeToggle"><i class="fas fa-moon"></i> <span data-lang-ar="السمة" data-lang-en="Theme">السمة</span></button>
                 <button class="btn" id="langToggle"><i class="fas fa-language"></i> <span data-lang-ar="English" data-lang-en="العربية">English</span></button>
             </div>
 
-            <!-- قسم الصبية -->
-            <div class="girl-section">
-                <i class="fas fa-female" style="color: var(--accent);"></i>
-                <select id="girlNameSelect">
-                    <option value="صفية">صفية</option>
-                    <option value="جيسيكا">جيسيكا</option>
-                    <option value="لمى">لمى</option>
-                    <option value="سارة">سارة</option>
+            <!-- قسم الكاشير (بدلاً من الصبية) -->
+            <div class="cashier-section">
+                <i class="fas fa-user-tie"></i>
+                <select id="cashierNameSelect">
+                    <option value="أحمد">أحمد</option>
+                    <option value="محمد">محمد</option>
+                    <option value="علي">علي</option>
+                    <option value="حسن">حسن</option>
+                    <option value="كريم">كريم</option>
                 </select>
                 <button class="handover-btn" id="handoverBtn" title="تسليم"><i class="fas fa-hand-holding-heart"></i></button>
             </div>
@@ -660,23 +856,59 @@
             <div class="assistant-response" id="assistantResponse"></div>
         </div>
 
+        <!-- شريط التصفية والأرشيف -->
+        <div class="filter-bar">
+            <div class="filter-btn active" id="showAllBtn">
+                <i class="fas fa-list"></i> <span data-lang-ar="الكل" data-lang-en="All">الكل</span>
+            </div>
+            <div class="filter-btn" id="showVegetableBtn">
+                <i class="fas fa-leaf"></i> <span data-lang-ar="الخضرة فقط" data-lang-en="Vegetable Only">الخضرة فقط</span>
+            </div>
+            <div class="filter-btn" id="showChargeBtn">
+                <i class="fas fa-truck"></i> <span data-lang-ar="الطلبيات" data-lang-en="Orders">الطلبيات</span>
+            </div>
+            
+            <div style="flex: 1;"></div>
+            
+            <div class="month-selector">
+                <i class="fas fa-calendar-alt"></i>
+                <select id="monthSelector">
+                    <option value="all" data-lang-ar="كل الشهور" data-lang-en="All Months">كل الشهور</option>
+                </select>
+            </div>
+            
+            <button class="btn btn-info" id="advancedStatsBtn">
+                <i class="fas fa-chart-pie"></i> <span data-lang-ar="إحصائيات متقدمة" data-lang-en="Advanced Stats">إحصائيات متقدمة</span>
+            </button>
+            
+            <button class="btn btn-success" id="exportToSheetsBtn">
+                <i class="fas fa-file-excel"></i> <span data-lang-ar="تصدير للغوغل شيت" data-lang-en="Export to Sheets">تصدير للغوغل شيت</span>
+            </button>
+        </div>
+
         <!-- شريط الإحصائيات -->
         <div class="stats-bar">
-            <div class="stat-item"><i class="fas fa-file-invoice" style="color: var(--accent);"></i> <span data-lang-ar="الفواتير:" data-lang-en="Invoices:">الفواتير:</span> <span class="stat-badge" id="totalInvoicesCount">0</span></div>
-            <div class="stat-item"><i class="fas fa-dollar-sign" style="color: var(--success);"></i> <span data-lang-ar="إجمالي القيمة:" data-lang-en="Total:">إجمالي القيمة:</span> <span class="stat-badge" id="totalInvoicesSum">0</span></div>
-            <div class="stat-item"><i class="fas fa-money-bill-wave" style="color: var(--warning);"></i> <span data-lang-ar="صرف الدولار:" data-lang-en="USD Rate:">صرف الدولار:</span> <input type="number" id="dollarRate" value="90000" step="1000" class="rate-input"></div>
+            <div class="stat-item"><i class="fas fa-file-invoice"></i> <span data-lang-ar="الفواتير:" data-lang-en="Invoices:">الفواتير:</span> <span class="stat-badge" id="totalInvoicesCount">0</span></div>
+            <div class="stat-item"><i class="fas fa-dollar-sign"></i> <span data-lang-ar="إجمالي القيمة:" data-lang-en="Total:">إجمالي القيمة:</span> <span class="stat-badge" id="totalInvoicesSum">0</span></div>
+            <div class="stat-item"><i class="fas fa-leaf"></i> <span data-lang-ar="إجمالي الخضرة:" data-lang-en="Total Vegetable:">إجمالي الخضرة:</span> <span class="stat-badge" id="totalVegetableSum">0</span></div>
+            <div class="stat-item"><i class="fas fa-truck"></i> <span data-lang-ar="إجمالي الشارج:" data-lang-en="Total Charge:">إجمالي الشارج:</span> <span class="stat-badge" id="totalChargeSum">0</span></div>
+            <div class="stat-item"><i class="fas fa-money-bill-wave"></i> <span data-lang-ar="صرف الدولار:" data-lang-en="USD Rate:">صرف الدولار:</span> <input type="number" id="dollarRate" value="90000" step="1000" class="rate-input"></div>
         </div>
 
         <!-- شريط البحث وإضافة الدلفري -->
         <div class="search-row">
             <div class="search-box">
-                <i class="fas fa-search" style="color: var(--text-muted);"></i>
+                <i class="fas fa-search"></i>
                 <input type="text" id="searchInput" placeholder="ابحث باسم الزبون أو رقم الطلبية أو الدلفري ...">
             </div>
             
             <div class="delivery-add">
                 <input type="text" id="newDeliveryName" placeholder="اسم دلفري جديد">
                 <button class="btn" id="addDeliveryBtn" style="border-radius: 50px; padding: 0.5rem 1.2rem;"><i class="fas fa-plus"></i> <span data-lang-ar="إضافة" data-lang-en="Add">إضافة</span></button>
+            </div>
+            
+            <div style="display: flex; gap: 0.5rem;">
+                <input type="date" id="orderDate" style="width: 150px;">
             </div>
         </div>
 
@@ -686,6 +918,7 @@
                 <thead>
                     <tr>
                         <th>#</th>
+                        <th data-lang-ar="التاريخ" data-lang-en="Date">التاريخ</th>
                         <th data-lang-ar="الزبون / رقم الطلبية" data-lang-en="Customer / Order No.">الزبون / رقم الطلبية</th>
                         <th data-lang-ar="قيمة الفاتورة" data-lang-en="Invoice Amount">قيمة الفاتورة</th>
                         <th data-lang-ar="الشارج" data-lang-en="Charge">الشارج</th>
@@ -715,12 +948,91 @@
         <div class="handover-section" id="handoverSection" style="display: none;">
             <div class="handover-info">
                 <i class="fas fa-check-circle" style="font-size: 1.5rem;"></i>
-                <span id="handoverGirlName">صفية</span> <span data-lang-ar="سلمت" data-lang-en="handed over">سلمت</span>
+                <span id="handoverCashierName">أحمد</span> <span data-lang-ar="سلم" data-lang-en="handed over">سلم</span>
             </div>
-            <div><span data-lang-ar="من:" data-lang-en="From:">من:</span> <span id="handoverFrom">جيسيكا</span></div>
+            <div><span data-lang-ar="من:" data-lang-en="From:">من:</span> <span id="handoverFrom">محمد</span></div>
             <div><span data-lang-ar="الإجمالي:" data-lang-en="Total:">الإجمالي:</span> <span id="handoverTotal">0</span></div>
             <div><span data-lang-ar="التاريخ:" data-lang-en="Date:">التاريخ:</span> <span id="handoverDate">الآن</span></div>
             <button class="btn" id="closeHandoverBtn" style="margin-right: auto;"><i class="fas fa-times"></i> <span data-lang-ar="إغلاق" data-lang-en="Close">إغلاق</span></button>
+        </div>
+    </div>
+
+    <!-- نافذة الإحصائيات المتقدمة -->
+    <div class="advanced-stats-modal" id="advancedStatsModal">
+        <div class="stats-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h2 style="color: var(--accent);"><i class="fas fa-chart-pie"></i> <span data-lang-ar="إحصائيات متقدمة" data-lang-en="Advanced Statistics">إحصائيات متقدمة</span></h2>
+                <button class="btn" id="closeStatsModal"><i class="fas fa-times"></i></button>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <i class="fas fa-file-invoice"></i>
+                    <h3 data-lang-ar="إجمالي الفواتير" data-lang-en="Total Invoices">إجمالي الفواتير</h3>
+                    <div class="value" id="statTotalInvoices">0</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-dollar-sign"></i>
+                    <h3 data-lang-ar="إجمالي المبيعات" data-lang-en="Total Sales">إجمالي المبيعات</h3>
+                    <div class="value" id="statTotalSales">0 ل.ل</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-truck"></i>
+                    <h3 data-lang-ar="إجمالي الشارج" data-lang-en="Total Charge">إجمالي الشارج</h3>
+                    <div class="value" id="statTotalCharge">0 ل.ل</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-leaf"></i>
+                    <h3 data-lang-ar="إجمالي الخضرة" data-lang-en="Total Vegetable">إجمالي الخضرة</h3>
+                    <div class="value" id="statTotalVegetable">0</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-hand-holding-usd"></i>
+                    <h3 data-lang-ar="الصافي (بدون شارج)" data-lang-en="Net (No Charge)">الصافي (بدون شارج)</h3>
+                    <div class="value" id="statNetWithoutCharge">0 ل.ل</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-percent"></i>
+                    <h3 data-lang-ar="متوسط الفاتورة" data-lang-en="Average Invoice">متوسط الفاتورة</h3>
+                    <div class="value" id="statAverageInvoice">0 ل.ل</div>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="statsChart"></canvas>
+            </div>
+            
+            <div style="text-align: center; margin-top: 1rem;">
+                <button class="btn" id="exportStatsBtn">
+                    <i class="fas fa-download"></i> <span data-lang-ar="تصدير الإحصائيات" data-lang-en="Export Stats">تصدير الإحصائيات</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة الخضرة -->
+    <div class="vegetable-modal" id="vegetableModal">
+        <div class="vegetable-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h2 style="color: var(--success);"><i class="fas fa-leaf"></i> <span data-lang-ar="قيم الخضرة" data-lang-en="Vegetable Values">قيم الخضرة</span></h2>
+                <button class="btn" id="closeVegetableModal"><i class="fas fa-times"></i></button>
+            </div>
+            
+            <table style="min-width: 100%;">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th data-lang-ar="التاريخ" data-lang-en="Date">التاريخ</th>
+                        <th data-lang-ar="الزبون" data-lang-en="Customer">الزبون</th>
+                        <th data-lang-ar="قيمة الخضرة" data-lang-en="Vegetable Value">قيمة الخضرة</th>
+                    </tr>
+                </thead>
+                <tbody id="vegetableTableBody"></tbody>
+            </table>
+            
+            <div style="margin-top: 2rem; text-align: center;">
+                <div class="stat-badge" style="font-size: 1.2rem;" id="totalVegetableModal">0</div>
+            </div>
         </div>
     </div>
 </div>
@@ -729,13 +1041,14 @@
     (function(){
         // ================== الثوابت ==================
         const STORAGE_KEYS = {
-            ORDERS: 'mohasib_v5_orders',
-            DELIVERIES: 'mohasib_v5_deliveries',
-            RATE: 'mohasib_v5_rate',
-            AUTH: 'mohasib_v5_auth',
-            LANG: 'mohasib_v5_lang',
-            THEME: 'mohasib_v5_theme',
-            GIRL: 'mohasib_v5_girl'
+            ORDERS: 'mohasib_v6_orders',
+            DELIVERIES: 'mohasib_v6_deliveries',
+            CASHIERS: 'mohasib_v6_cashiers',
+            RATE: 'mohasib_v6_rate',
+            AUTH: 'mohasib_v6_auth',
+            LANG: 'mohasib_v6_lang',
+            THEME: 'mohasib_v6_theme',
+            CASHIER: 'mohasib_v6_cashier'
         };
         
         const SECRET_CLEAR_CODE = '1234';
@@ -745,10 +1058,14 @@
         // ================== الحالة ==================
         let orders = [];
         let deliveries = [];
+        let cashiers = ['أحمد', 'محمد', 'علي', 'حسن', 'كريم'];
         let dollarRate = 90000;
         let isAuthenticated = false;
         let filterText = '';
-        let currentGirl = 'صفية';
+        let currentCashier = 'أحمد';
+        let currentFilter = 'all'; // all, vegetable, charge
+        let selectedMonth = 'all';
+        let statsChart = null;
 
         // ================== العناصر ==================
         const loginScreen = document.getElementById('loginScreen');
@@ -769,14 +1086,17 @@
         const searchInput = document.getElementById('searchInput');
         const totalInvoicesCountSpan = document.getElementById('totalInvoicesCount');
         const totalInvoicesSumSpan = document.getElementById('totalInvoicesSum');
-        const girlNameSelect = document.getElementById('girlNameSelect');
+        const totalVegetableSumSpan = document.getElementById('totalVegetableSum');
+        const totalChargeSumSpan = document.getElementById('totalChargeSum');
+        const cashierNameSelect = document.getElementById('cashierNameSelect');
         const handoverBtn = document.getElementById('handoverBtn');
         const handoverSection = document.getElementById('handoverSection');
-        const handoverGirlName = document.getElementById('handoverGirlName');
+        const handoverCashierName = document.getElementById('handoverCashierName');
         const handoverFrom = document.getElementById('handoverFrom');
         const handoverTotal = document.getElementById('handoverTotal');
         const handoverDate = document.getElementById('handoverDate');
         const closeHandoverBtn = document.getElementById('closeHandoverBtn');
+        const orderDate = document.getElementById('orderDate');
         
         // عناصر المساعد الذكي
         const assistantMicBtn = document.getElementById('assistantMicBtn');
@@ -784,15 +1104,63 @@
         const assistantSendBtn = document.getElementById('assistantSendBtn');
         const assistantResponse = document.getElementById('assistantResponse');
         
-        // التعرف على الصوت
-        let recognition = null;
-        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            recognition = new SpeechRecognition();
-            recognition.continuous = false;
-            recognition.interimResults = false;
-            recognition.lang = 'ar-SA';
+        // عناصر التصفية
+        const showAllBtn = document.getElementById('showAllBtn');
+        const showVegetableBtn = document.getElementById('showVegetableBtn');
+        const showChargeBtn = document.getElementById('showChargeBtn');
+        const monthSelector = document.getElementById('monthSelector');
+        
+        // عناصر الإحصائيات المتقدمة
+        const advancedStatsBtn = document.getElementById('advancedStatsBtn');
+        const advancedStatsModal = document.getElementById('advancedStatsModal');
+        const closeStatsModal = document.getElementById('closeStatsModal');
+        const exportStatsBtn = document.getElementById('exportStatsBtn');
+        const statTotalInvoices = document.getElementById('statTotalInvoices');
+        const statTotalSales = document.getElementById('statTotalSales');
+        const statTotalCharge = document.getElementById('statTotalCharge');
+        const statTotalVegetable = document.getElementById('statTotalVegetable');
+        const statNetWithoutCharge = document.getElementById('statNetWithoutCharge');
+        const statAverageInvoice = document.getElementById('statAverageInvoice');
+        
+        // عناصر الخضرة
+        const vegetableModal = document.getElementById('vegetableModal');
+        const closeVegetableModal = document.getElementById('closeVegetableModal');
+        const vegetableTableBody = document.getElementById('vegetableTableBody');
+        const totalVegetableModal = document.getElementById('totalVegetableModal');
+        
+        // عنصر التصدير
+        const exportToSheetsBtn = document.getElementById('exportToSheetsBtn');
+
+        // ================== دوال الوقت والتاريخ ==================
+        function updateDateTime() {
+            const now = new Date();
+            const lang = document.documentElement.getAttribute('data-lang');
+            
+            const dateOptions = { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                weekday: 'long'
+            };
+            
+            const timeOptions = {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            };
+            
+            document.getElementById('currentDate').textContent = now.toLocaleDateString(lang === 'ar' ? 'ar-LB' : 'en-US', dateOptions);
+            document.getElementById('currentTime').textContent = now.toLocaleTimeString(lang === 'ar' ? 'ar-LB' : 'en-US', timeOptions);
+            
+            // تعيين تاريخ اليوم في حقل التاريخ
+            if (!orderDate.value) {
+                const today = now.toISOString().split('T')[0];
+                orderDate.value = today;
+            }
         }
+
+        // تحديث كل ثانية
+        setInterval(updateDateTime, 1000);
 
         // ================== دوال مساعدة ==================
         function applyLanguage(lang) {
@@ -812,11 +1180,24 @@
             if (recognition) {
                 recognition.lang = lang === 'ar' ? 'ar-SA' : 'en-US';
             }
+            
+            updateDateTime();
         }
 
         function setTheme(theme) {
             document.documentElement.setAttribute('data-theme', theme);
             localStorage.setItem(STORAGE_KEYS.THEME, theme);
+            
+            // تغيير لون الأيقونات
+            const icons = document.querySelectorAll('i');
+            icons.forEach(icon => {
+                if (theme === 'light') {
+                    icon.style.color = 'var(--icon-light)';
+                } else {
+                    icon.style.color = 'var(--icon-dark)';
+                }
+            });
+            
             themeToggle.innerHTML = theme === 'light' 
                 ? '<i class="fas fa-moon"></i> ' + (document.documentElement.getAttribute('data-lang') === 'ar' ? 'السمة' : 'Theme')
                 : '<i class="fas fa-sun"></i> ' + (document.documentElement.getAttribute('data-lang') === 'ar' ? 'السمة' : 'Theme');
@@ -842,34 +1223,93 @@
             dollarRate = savedRate ? parseFloat(savedRate) : 90000;
             dollarRateInput.value = dollarRate;
             
-            const savedGirl = localStorage.getItem(STORAGE_KEYS.GIRL);
-            if(savedGirl) {
-                currentGirl = savedGirl;
-                girlNameSelect.value = savedGirl;
+            const savedCashier = localStorage.getItem(STORAGE_KEYS.CASHIER);
+            if(savedCashier) {
+                currentCashier = savedCashier;
+                cashierNameSelect.value = savedCashier;
             }
+            
+            // تعبئة شهور التصفية
+            populateMonths();
             
             renderOrders();
             updateStats();
         }
 
+        // ================== تعبئة الشهور ==================
+        function populateMonths() {
+            const months = new Set();
+            orders.forEach(order => {
+                if (order.date) {
+                    const date = new Date(order.date);
+                    const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                    const monthName = date.toLocaleDateString(document.documentElement.getAttribute('data-lang') === 'ar' ? 'ar-LB' : 'en-US', { year: 'numeric', month: 'long' });
+                    months.add(JSON.stringify({ key: monthKey, name: monthName }));
+                }
+            });
+            
+            monthSelector.innerHTML = '<option value="all" data-lang-ar="كل الشهور" data-lang-en="All Months">كل الشهور</option>';
+            
+            Array.from(months).sort().reverse().forEach(monthJson => {
+                const month = JSON.parse(monthJson);
+                const option = document.createElement('option');
+                option.value = month.key;
+                option.textContent = month.name;
+                monthSelector.appendChild(option);
+            });
+        }
+
         // ================== الإحصائيات ==================
         function updateStats() {
             let totalValue = 0;
+            let totalVegetable = 0;
+            let totalCharge = 0;
+            
             orders.forEach(o => {
                 totalValue += parseFloat(o.invoice) || 0;
+                totalVegetable += parseFloat(o.vegetable) || 0;
+                totalCharge += parseFloat(o.charge) || 0;
             });
+            
             totalInvoicesCountSpan.innerText = orders.length;
             totalInvoicesSumSpan.innerText = totalValue.toLocaleString() + ' ل.ل';
+            totalVegetableSumSpan.innerText = totalVegetable.toLocaleString();
+            totalChargeSumSpan.innerText = totalCharge.toLocaleString() + ' ل.ل';
         }
 
-        // ================== حساب بعد الشارج (القيمة الصحيحة) ==================
+        // ================== حساب بعد الشارج ==================
         function calculateAfterCharge(invoice, charge) {
             const invoiceVal = parseFloat(invoice) || 0;
             const chargeVal = parseFloat(charge) || 0;
-            
-            // بعد الشارج = قيمة الفاتورة - قيمة الشارج (بالليرة)
-            // نفترض أن الشارج هو قيمة الشحن بالليرة مباشرة
             return invoiceVal - chargeVal;
+        }
+
+        // ================== تصفية الطلبات ==================
+        function filterOrders() {
+            return orders.filter(order => {
+                // تصفية النص
+                if (filterText) {
+                    const customerMatch = (order.customer || '').toLowerCase().includes(filterText);
+                    const deliveryMatch = (order.delivery || '').toLowerCase().includes(filterText);
+                    if (!customerMatch && !deliveryMatch) return false;
+                }
+                
+                // تصفية النوع
+                if (currentFilter === 'vegetable') {
+                    if (!order.vegetable || parseFloat(order.vegetable) === 0) return false;
+                } else if (currentFilter === 'charge') {
+                    if (!order.charge || parseFloat(order.charge) === 0) return false;
+                }
+                
+                // تصفية الشهر
+                if (selectedMonth !== 'all' && order.date) {
+                    const orderDate = new Date(order.date);
+                    const orderMonth = `${orderDate.getFullYear()}-${String(orderDate.getMonth() + 1).padStart(2, '0')}`;
+                    if (orderMonth !== selectedMonth) return false;
+                }
+                
+                return true;
+            });
         }
 
         // ================== رسم الجدول ==================
@@ -877,12 +1317,7 @@
             const tbody = ordersBody;
             tbody.innerHTML = '';
             
-            const filtered = orders.filter((ord) => {
-                if (!filterText) return true;
-                const customerMatch = (ord.customer || '').toLowerCase().includes(filterText);
-                const deliveryMatch = (ord.delivery || '').toLowerCase().includes(filterText);
-                return customerMatch || deliveryMatch;
-            });
+            const filtered = filterOrders();
 
             filtered.forEach((order) => {
                 const originalIndex = orders.findIndex(o => o === order);
@@ -892,11 +1327,12 @@
                 const invoiceVal = parseFloat(order.invoice) || 0;
                 const chargeVal = parseFloat(order.charge) || 0;
                 
-                // بعد الشارج = الفاتورة - الشارج (بالليرة)
-                const afterCharge = invoiceVal - chargeVal;
+                // بعد الشارج
+                const afterCharge = calculateAfterCharge(invoiceVal, chargeVal);
 
                 tr.innerHTML = `
-                    <td>${orders.indexOf(order)+1}</td>
+                    <td>${filtered.indexOf(order)+1}</td>
+                    <td><input type="date" class="order-date" data-index="${originalIndex}" value="${order.date || orderDate.value || new Date().toISOString().split('T')[0]}"></td>
                     <td><input type="text" class="order-customer" data-index="${originalIndex}" value="${order.customer || ''}" placeholder="اسم الزبون"></td>
                     <td><input type="number" class="order-invoice" data-index="${originalIndex}" value="${order.invoice || ''}" placeholder="ل.ل"></td>
                     <td><input type="number" class="order-charge" data-index="${originalIndex}" value="${order.charge || ''}" placeholder="الشارج"></td>
@@ -917,10 +1353,19 @@
 
             attachRowEvents();
             updateStats();
+            populateMonths();
         }
 
         // ================== ربط أحداث الجدول ==================
         function attachRowEvents() {
+            document.querySelectorAll('.order-date').forEach(inp => {
+                inp.addEventListener('change', function(e) {
+                    const idx = this.dataset.index;
+                    orders[idx].date = this.value;
+                    saveOrders(); renderOrders();
+                });
+            });
+            
             document.querySelectorAll('.order-customer').forEach(inp => {
                 inp.addEventListener('change', function(e) {
                     const idx = this.dataset.index;
@@ -980,13 +1425,12 @@
             document.querySelectorAll('.delete-row-btn').forEach(btn => {
                 btn.addEventListener('click', function(e) {
                     const code = secretCodeInput.value.trim();
+                    const lang = document.documentElement.getAttribute('data-lang');
                     if (code !== SECRET_DELETE_CODE) {
-                        const lang = document.documentElement.getAttribute('data-lang');
                         alert(lang === 'ar' ? '❌ كود المسح غير صحيح!' : '❌ Wrong delete code!');
                         return;
                     }
                     const idx = this.dataset.index;
-                    const lang = document.documentElement.getAttribute('data-lang');
                     if(confirm(lang === 'ar' ? 'هل أنت متأكد من حذف هذا الصف؟' : 'Are you sure you want to delete this row?')) {
                         orders.splice(idx, 1);
                         saveOrders();
@@ -1017,6 +1461,7 @@
         // ================== إضافة صف جديد ==================
         addRowBtn.addEventListener('click', () => {
             orders.push({ 
+                date: orderDate.value || new Date().toISOString().split('T')[0],
                 customer: '', 
                 invoice: '', 
                 charge: '', 
@@ -1083,10 +1528,10 @@
             localStorage.setItem(STORAGE_KEYS.RATE, dollarRate);
         });
 
-        // ================== اسم الصبية ==================
-        girlNameSelect.addEventListener('change', (e) => {
-            currentGirl = e.target.value;
-            localStorage.setItem(STORAGE_KEYS.GIRL, currentGirl);
+        // ================== اسم الكاشير ==================
+        cashierNameSelect.addEventListener('change', (e) => {
+            currentCashier = e.target.value;
+            localStorage.setItem(STORAGE_KEYS.CASHIER, currentCashier);
         });
 
         // ================== تسليم (Handover) ==================
@@ -1098,8 +1543,8 @@
                 }
             });
             
-            handoverGirlName.innerText = currentGirl;
-            handoverFrom.innerText = girlNameSelect.value;
+            handoverCashierName.innerText = currentCashier;
+            handoverFrom.innerText = cashierNameSelect.value;
             handoverTotal.innerText = total.toLocaleString() + ' ل.ل';
             handoverDate.innerText = new Date().toLocaleString(document.documentElement.getAttribute('data-lang') === 'ar' ? 'ar-LB' : 'en-US');
             handoverSection.style.display = 'flex';
@@ -1124,6 +1569,7 @@
             if (file) {
                 for (let i=0; i<3; i++) {
                     orders.push({ 
+                        date: new Date().toISOString().split('T')[0],
                         customer: lang === 'ar' ? 'زبون جديد' : 'New Customer', 
                         invoice: '250000', 
                         charge: '5000', 
@@ -1150,6 +1596,7 @@
             // أوامر الإضافة
             if (lowerCmd.includes('اضف طلب') || lowerCmd.includes('add order')) {
                 orders.push({ 
+                    date: new Date().toISOString().split('T')[0],
                     customer: lang === 'ar' ? 'زبون جديد' : 'New Customer', 
                     invoice: '0', 
                     charge: '0', 
@@ -1176,17 +1623,27 @@
             // أوامر الإحصائيات
             else if (lowerCmd.includes('احصائيات') || lowerCmd.includes('statistics') || lowerCmd.includes('stats')) {
                 let total = 0;
-                orders.forEach(o => total += parseFloat(o.invoice) || 0);
+                let vegetable = 0;
+                orders.forEach(o => {
+                    total += parseFloat(o.invoice) || 0;
+                    vegetable += parseFloat(o.vegetable) || 0;
+                });
                 assistantResponse.textContent = lang === 'ar' 
-                    ? `📊 عدد الفواتير: ${orders.length} - الإجمالي: ${total.toLocaleString()} ل.ل`
-                    : `📊 Invoices: ${orders.length} - Total: ${total.toLocaleString()} L.L`;
+                    ? `📊 الفواتير: ${orders.length} - الإجمالي: ${total.toLocaleString()} ل.ل - الخضرة: ${vegetable.toLocaleString()}`
+                    : `📊 Invoices: ${orders.length} - Total: ${total.toLocaleString()} L.L - Vegetable: ${vegetable.toLocaleString()}`;
+            }
+            
+            // أوامر التصدير
+            else if (lowerCmd.includes('تصدير') || lowerCmd.includes('export')) {
+                exportToGoogleSheets();
+                assistantResponse.textContent = lang === 'ar' ? '📤 جاري التصدير...' : '📤 Exporting...';
             }
             
             // أوامر المساعدة
             else if (lowerCmd.includes('مساعدة') || lowerCmd.includes('help')) {
                 assistantResponse.textContent = lang === 'ar'
-                    ? 'الأوامر المتاحة: اضف طلب - امسح الكل - احصائيات - سعر الصرف [القيمة] - بحث [النص]'
-                    : 'Available commands: add order - clear all - statistics - set rate [value] - search [text]';
+                    ? 'الأوامر: اضف طلب - امسح الكل - احصائيات - تصدير - سعر الصرف [القيمة] - بحث [النص]'
+                    : 'Commands: add order - clear all - statistics - export - set rate [value] - search [text]';
             }
             
             // أوامر سعر الصرف
@@ -1240,7 +1697,14 @@
         });
 
         // التعرف على الصوت
-        if (recognition) {
+        let recognition = null;
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.lang = 'ar-SA';
+
             assistantMicBtn.addEventListener('click', () => {
                 assistantMicBtn.classList.add('listening');
                 recognition.start();
@@ -1267,6 +1731,222 @@
             assistantMicBtn.title = 'التعرف على الصوت غير مدعوم في هذا المتصفح';
         }
 
+        // ================== أحداث التصفية ==================
+        showAllBtn.addEventListener('click', () => {
+            currentFilter = 'all';
+            showAllBtn.classList.add('active');
+            showVegetableBtn.classList.remove('active');
+            showChargeBtn.classList.remove('active');
+            renderOrders();
+        });
+
+        showVegetableBtn.addEventListener('click', () => {
+            currentFilter = 'vegetable';
+            showAllBtn.classList.remove('active');
+            showVegetableBtn.classList.add('active');
+            showChargeBtn.classList.remove('active');
+            renderOrders();
+        });
+
+        showChargeBtn.addEventListener('click', () => {
+            currentFilter = 'charge';
+            showAllBtn.classList.remove('active');
+            showVegetableBtn.classList.remove('active');
+            showChargeBtn.classList.add('active');
+            renderOrders();
+        });
+
+        monthSelector.addEventListener('change', (e) => {
+            selectedMonth = e.target.value;
+            renderOrders();
+        });
+
+        // ================== الإحصائيات المتقدمة ==================
+        function updateAdvancedStats() {
+            let totalInvoices = orders.length;
+            let totalSales = 0;
+            let totalCharge = 0;
+            let totalVegetable = 0;
+            
+            orders.forEach(order => {
+                totalSales += parseFloat(order.invoice) || 0;
+                totalCharge += parseFloat(order.charge) || 0;
+                totalVegetable += parseFloat(order.vegetable) || 0;
+            });
+            
+            let netWithoutCharge = totalSales - totalCharge;
+            let averageInvoice = totalInvoices > 0 ? totalSales / totalInvoices : 0;
+            
+            statTotalInvoices.textContent = totalInvoices;
+            statTotalSales.textContent = totalSales.toLocaleString() + ' ل.ل';
+            statTotalCharge.textContent = totalCharge.toLocaleString() + ' ل.ل';
+            statTotalVegetable.textContent = totalVegetable.toLocaleString();
+            statNetWithoutCharge.textContent = netWithoutCharge.toLocaleString() + ' ل.ل';
+            statAverageInvoice.textContent = averageInvoice.toLocaleString() + ' ل.ل';
+            
+            // رسم بياني
+            if (statsChart) {
+                statsChart.destroy();
+            }
+            
+            const ctx = document.getElementById('statsChart').getContext('2d');
+            statsChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['المبيعات', 'الشارج', 'الخضرة', 'الصافي'],
+                    datasets: [{
+                        label: 'القيمة',
+                        data: [totalSales, totalCharge, totalVegetable, netWithoutCharge],
+                        backgroundColor: [
+                            'rgba(212, 175, 55, 0.8)',
+                            'rgba(220, 53, 69, 0.8)',
+                            'rgba(40, 167, 69, 0.8)',
+                            'rgba(23, 162, 184, 0.8)'
+                        ],
+                        borderColor: [
+                            '#d4af37',
+                            '#dc3545',
+                            '#28a745',
+                            '#17a2b8'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        advancedStatsBtn.addEventListener('click', () => {
+            updateAdvancedStats();
+            advancedStatsModal.style.display = 'flex';
+        });
+
+        closeStatsModal.addEventListener('click', () => {
+            advancedStatsModal.style.display = 'none';
+        });
+
+        // ================== نافذة الخضرة ==================
+        function showVegetableModal() {
+            const filtered = orders.filter(order => order.vegetable && parseFloat(order.vegetable) > 0);
+            let total = 0;
+            
+            vegetableTableBody.innerHTML = '';
+            
+            filtered.forEach((order, index) => {
+                const val = parseFloat(order.vegetable) || 0;
+                total += val;
+                
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${order.date || 'بدون تاريخ'}</td>
+                    <td>${order.customer || 'بدون اسم'}</td>
+                    <td>${val.toLocaleString()}</td>
+                `;
+                vegetableTableBody.appendChild(tr);
+            });
+            
+            totalVegetableModal.textContent = total.toLocaleString();
+            vegetableModal.style.display = 'flex';
+        }
+
+        showVegetableBtn.addEventListener('dblclick', showVegetableModal);
+
+        closeVegetableModal.addEventListener('click', () => {
+            vegetableModal.style.display = 'none';
+        });
+
+        // ================== التصدير للغوغل شيت ==================
+        function exportToGoogleSheets() {
+            const lang = document.documentElement.getAttribute('data-lang');
+            
+            // تجهيز البيانات
+            let csvContent = "data:text/csv;charset=utf-8,";
+            
+            // إضافة رأس التقرير
+            const today = new Date().toLocaleDateString(lang === 'ar' ? 'ar-LB' : 'en-US');
+            csvContent += lang === 'ar' ? `تقرير ترصيد,${today}\n` : `Balance Report,${today}\n`;
+            csvContent += lang === 'ar' ? "الكاشير," + currentCashier + "\n" : "Cashier," + currentCashier + "\n";
+            csvContent += "\n";
+            
+            // إضافة عناوين الأعمدة
+            if (lang === 'ar') {
+                csvContent += "التاريخ,الزبون,قيمة الفاتورة,الشارج,بعد الشارج,صرافة $,قيمة الخضرة,الدلفري,تم الدفع\n";
+            } else {
+                csvContent += "Date,Customer,Invoice Amount,Charge,After Charge,Exchange $,Vegetable Value,Delivery,Paid\n";
+            }
+            
+            // إضافة البيانات
+            orders.forEach(order => {
+                const afterCharge = calculateAfterCharge(order.invoice, order.charge);
+                const row = [
+                    order.date || '',
+                    order.customer || '',
+                    order.invoice || '0',
+                    order.charge || '0',
+                    afterCharge,
+                    order.exchange || '0',
+                    order.vegetable || '0',
+                    order.delivery || '',
+                    order.paid ? (lang === 'ar' ? 'نعم' : 'Yes') : (lang === 'ar' ? 'لا' : 'No')
+                ];
+                csvContent += row.join(",") + "\n";
+            });
+            
+            // إضافة ملخص
+            let totalSales = 0;
+            let totalCharge = 0;
+            let totalVegetable = 0;
+            
+            orders.forEach(order => {
+                totalSales += parseFloat(order.invoice) || 0;
+                totalCharge += parseFloat(order.charge) || 0;
+                totalVegetable += parseFloat(order.vegetable) || 0;
+            });
+            
+            csvContent += "\n";
+            csvContent += lang === 'ar' ? "الملخص,\n" : "Summary,\n";
+            csvContent += lang === 'ar' ? `إجمالي الفواتير,${orders.length}\n` : `Total Invoices,${orders.length}\n`;
+            csvContent += lang === 'ar' ? `إجمالي المبيعات,${totalSales} ل.ل\n` : `Total Sales,${totalSales} L.L\n`;
+            csvContent += lang === 'ar' ? `إجمالي الشارج,${totalCharge} ل.ل\n` : `Total Charge,${totalCharge} L.L\n`;
+            csvContent += lang === 'ar' ? `إجمالي الخضرة,${totalVegetable}\n` : `Total Vegetable,${totalVegetable}\n`;
+            csvContent += lang === 'ar' ? `الصافي (بدون شارج),${totalSales - totalCharge} ل.ل\n` : `Net (No Charge),${totalSales - totalCharge} L.L\n`;
+            
+            // إنشاء رابط التحميل
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `ترصيد_${currentCashier}_${today}.csv`);
+            document.body.appendChild(link);
+            
+            link.click();
+            document.body.removeChild(link);
+            
+            document.getElementById('statusMessage').innerText = lang === 'ar' 
+                ? '✅ تم تصدير الملف بنجاح' 
+                : '✅ File exported successfully';
+        }
+
+        exportToSheetsBtn.addEventListener('click', exportToGoogleSheets);
+
+        // ================== إغلاق النوافذ عند الضغط خارجها ==================
+        window.addEventListener('click', (e) => {
+            if (e.target === advancedStatsModal) {
+                advancedStatsModal.style.display = 'none';
+            }
+            if (e.target === vegetableModal) {
+                vegetableModal.style.display = 'none';
+            }
+        });
+
         // ================== تهيئة ==================
         function init() {
             const storedLang = localStorage.getItem(STORAGE_KEYS.LANG) || 'ar';
@@ -1283,6 +1963,8 @@
                 loginScreen.style.display = 'flex';
                 mainDashboard.style.display = 'none';
             }
+            
+            updateDateTime();
         }
         
         init();
