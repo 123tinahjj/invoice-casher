@@ -495,7 +495,7 @@
             width: 120px;
         }
 
-        /* شريط البحث */
+        /* شريط البحث وتحديد اليوم */
         .search-row {
             display: flex;
             flex-wrap: wrap;
@@ -529,6 +529,41 @@
 
         .search-box i {
             color: var(--icon);
+        }
+
+        /* جولة اليوم - تصميم جديد */
+        .day-tour {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: rgba(212, 175, 55, 0.15);
+            padding: 0.4rem 1.5rem 0.4rem 1rem;
+            border-radius: 50px;
+            border: 2px solid var(--accent);
+        }
+        .day-tour i {
+            font-size: 1.2rem;
+            color: var(--accent);
+        }
+        .day-tour select {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-weight: 600;
+            padding: 0.3rem 0.5rem;
+            border-radius: 20px;
+        }
+        .day-tour select:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px var(--accent);
+        }
+        .tour-badge {
+            background: var(--accent);
+            color: black;
+            font-weight: 700;
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            font-size: 0.9rem;
         }
 
         /* الجدول */
@@ -769,6 +804,7 @@
             .login-card { padding: 2rem 1.5rem; }
             .assistant-section { padding: 1rem; }
             .filter-bar { flex-direction: column; align-items: flex-start; }
+            .search-row { flex-direction: column; align-items: stretch; }
         }
     </style>
 </head>
@@ -823,15 +859,13 @@
                 <button class="btn" id="langToggle"><i class="fas fa-language"></i> <span data-lang-ar="English" data-lang-en="العربية">English</span></button>
             </div>
 
-            <!-- قسم الكاشير (بدلاً من الصبية) -->
+            <!-- قسم الكاشير (ثلاثة فقط) -->
             <div class="cashier-section">
                 <i class="fas fa-user-tie"></i>
                 <select id="cashierNameSelect">
-                    <option value="Jessica">أحمد</option>
-                    <option value="Safiya">محمد</option>
-                    <!-- <option value="علي">علي</option> -->
-                    <!-- <option value="حسن">حسن</option> -->
-                    <!-- <option value="كريم">كريم</option> -->
+                    <option value="Safiya">Safiya</option>
+                    <option value="Jessica">Jessica</option>
+                    <option value="Amin">Amin</option>
                 </select>
                 <button class="handover-btn" id="handoverBtn" title="تسليم"><i class="fas fa-hand-holding-heart"></i></button>
             </div>
@@ -844,19 +878,19 @@
             </div>
         </div>
 
-        <!-- المساعد الذكي -->
+        <!-- المساعد الذكي مع روبوت المحادثة -->
         <div class="assistant-section">
             <button class="assistant-btn" id="assistantMicBtn">
                 <i class="fas fa-microphone"></i>
             </button>
-            <input type="text" class="assistant-input" id="assistantInput" placeholder="اكتب أمرك أو تحدث...">
+            <input type="text" class="assistant-input" id="assistantInput" placeholder="اكتب أمرك أو تحدث... (مثال: كيف أستخدم التطبيق؟)">
             <button class="assistant-btn" id="assistantSendBtn">
                 <i class="fas fa-paper-plane"></i>
             </button>
             <div class="assistant-response" id="assistantResponse"></div>
         </div>
 
-        <!-- شريط التصفية والأرشيف -->
+        <!-- شريط التصفية والأرشيف + جولة اليوم -->
         <div class="filter-bar">
             <div class="filter-btn active" id="showAllBtn">
                 <i class="fas fa-list"></i> <span data-lang-ar="الكل" data-lang-en="All">الكل</span>
@@ -868,6 +902,16 @@
                 <i class="fas fa-truck"></i> <span data-lang-ar="الطلبيات" data-lang-en="Orders">الطلبيات</span>
             </div>
             
+            <!-- جولة اليوم: اختيار اليوم -->
+            <div class="day-tour">
+                <i class="fas fa-calendar-day"></i>
+                <span data-lang-ar="جولة اليوم:" data-lang-en="Today's Tour:">جولة اليوم:</span>
+                <select id="dayTourSelect">
+                    <option value="all" data-lang-ar="كل الأيام" data-lang-en="All days">كل الأيام</option>
+                </select>
+                <span class="tour-badge" id="dayTourCount">0</span>
+            </div>
+
             <div style="flex: 1;"></div>
             
             <div class="month-selector">
@@ -948,9 +992,9 @@
         <div class="handover-section" id="handoverSection" style="display: none;">
             <div class="handover-info">
                 <i class="fas fa-check-circle" style="font-size: 1.5rem;"></i>
-                <span id="handoverCashierName">أحمد</span> <span data-lang-ar="سلم" data-lang-en="handed over">سلم</span>
+                <span id="handoverCashierName">Safiya</span> <span data-lang-ar="سلم" data-lang-en="handed over">سلم</span>
             </div>
-            <div><span data-lang-ar="من:" data-lang-en="From:">من:</span> <span id="handoverFrom">محمد</span></div>
+            <div><span data-lang-ar="من:" data-lang-en="From:">من:</span> <span id="handoverFrom">Amin</span></div>
             <div><span data-lang-ar="الإجمالي:" data-lang-en="Total:">الإجمالي:</span> <span id="handoverTotal">0</span></div>
             <div><span data-lang-ar="التاريخ:" data-lang-en="Date:">التاريخ:</span> <span id="handoverDate">الآن</span></div>
             <button class="btn" id="closeHandoverBtn" style="margin-right: auto;"><i class="fas fa-times"></i> <span data-lang-ar="إغلاق" data-lang-en="Close">إغلاق</span></button>
@@ -1041,14 +1085,14 @@
     (function(){
         // ================== الثوابت ==================
         const STORAGE_KEYS = {
-            ORDERS: 'mohasib_v6_orders',
-            DELIVERIES: 'mohasib_v6_deliveries',
-            CASHIERS: 'mohasib_v6_cashiers',
-            RATE: 'mohasib_v6_rate',
-            AUTH: 'mohasib_v6_auth',
-            LANG: 'mohasib_v6_lang',
-            THEME: 'mohasib_v6_theme',
-            CASHIER: 'mohasib_v6_cashier'
+            ORDERS: 'mohasib_v7_orders',
+            DELIVERIES: 'mohasib_v7_deliveries',
+            CASHIERS: 'mohasib_v7_cashiers',
+            RATE: 'mohasib_v7_rate',
+            AUTH: 'mohasib_v7_auth',
+            LANG: 'mohasib_v7_lang',
+            THEME: 'mohasib_v7_theme',
+            CASHIER: 'mohasib_v7_cashier'
         };
         
         const SECRET_CLEAR_CODE = '1234';
@@ -1058,13 +1102,14 @@
         // ================== الحالة ==================
         let orders = [];
         let deliveries = [];
-        let cashiers = ['أحمد', 'محمد', 'علي', 'حسن', 'كريم'];
+        let cashiers = ['Safiya', 'Jessica', 'Amin'];  // فقط ثلاثة
         let dollarRate = 90000;
         let isAuthenticated = false;
         let filterText = '';
-        let currentCashier = 'أحمد';
+        let currentCashier = 'Safiya';
         let currentFilter = 'all'; // all, vegetable, charge
         let selectedMonth = 'all';
+        let selectedDay = 'all';   // للجولة اليومية
         let statsChart = null;
 
         // ================== العناصر ==================
@@ -1098,17 +1143,19 @@
         const closeHandoverBtn = document.getElementById('closeHandoverBtn');
         const orderDate = document.getElementById('orderDate');
         
-        // عناصر المساعد الذكي
+        // المساعد الذكي
         const assistantMicBtn = document.getElementById('assistantMicBtn');
         const assistantInput = document.getElementById('assistantInput');
         const assistantSendBtn = document.getElementById('assistantSendBtn');
         const assistantResponse = document.getElementById('assistantResponse');
         
-        // عناصر التصفية
+        // عناصر التصفية + جولة اليوم
         const showAllBtn = document.getElementById('showAllBtn');
         const showVegetableBtn = document.getElementById('showVegetableBtn');
         const showChargeBtn = document.getElementById('showChargeBtn');
         const monthSelector = document.getElementById('monthSelector');
+        const dayTourSelect = document.getElementById('dayTourSelect');
+        const dayTourCount = document.getElementById('dayTourCount');
         
         // عناصر الإحصائيات المتقدمة
         const advancedStatsBtn = document.getElementById('advancedStatsBtn');
@@ -1152,14 +1199,12 @@
             document.getElementById('currentDate').textContent = now.toLocaleDateString(lang === 'ar' ? 'ar-LB' : 'en-US', dateOptions);
             document.getElementById('currentTime').textContent = now.toLocaleTimeString(lang === 'ar' ? 'ar-LB' : 'en-US', timeOptions);
             
-            // تعيين تاريخ اليوم في حقل التاريخ
             if (!orderDate.value) {
                 const today = now.toISOString().split('T')[0];
                 orderDate.value = today;
             }
         }
 
-        // تحديث كل ثانية
         setInterval(updateDateTime, 1000);
 
         // ================== دوال مساعدة ==================
@@ -1167,7 +1212,6 @@
             document.documentElement.setAttribute('data-lang', lang);
             localStorage.setItem(STORAGE_KEYS.LANG, lang);
             
-            // تغيير نصوص جميع العناصر
             document.querySelectorAll('[data-lang-ar]').forEach(el => {
                 if (lang === 'ar') {
                     el.textContent = el.getAttribute('data-lang-ar');
@@ -1176,7 +1220,6 @@
                 }
             });
             
-            // تغيير لغة التعرف الصوتي
             if (recognition) {
                 recognition.lang = lang === 'ar' ? 'ar-SA' : 'en-US';
             }
@@ -1188,7 +1231,6 @@
             document.documentElement.setAttribute('data-theme', theme);
             localStorage.setItem(STORAGE_KEYS.THEME, theme);
             
-            // تغيير لون الأيقونات
             const icons = document.querySelectorAll('i');
             icons.forEach(icon => {
                 if (theme === 'light') {
@@ -1224,38 +1266,55 @@
             dollarRateInput.value = dollarRate;
             
             const savedCashier = localStorage.getItem(STORAGE_KEYS.CASHIER);
-            if(savedCashier) {
+            if(savedCashier && cashiers.includes(savedCashier)) {
                 currentCashier = savedCashier;
                 cashierNameSelect.value = savedCashier;
+            } else {
+                cashierNameSelect.value = 'Safiya';
             }
             
-            // تعبئة شهور التصفية
-            populateMonths();
-            
+            populateMonthsAndDays();
             renderOrders();
             updateStats();
         }
 
-        // ================== تعبئة الشهور ==================
-        function populateMonths() {
-            const months = new Set();
+        // ================== تعبئة الشهور والأيام ==================
+        function populateMonthsAndDays() {
+            const monthsSet = new Set();
+            const daysSet = new Set();
+            
             orders.forEach(order => {
                 if (order.date) {
                     const date = new Date(order.date);
                     const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
                     const monthName = date.toLocaleDateString(document.documentElement.getAttribute('data-lang') === 'ar' ? 'ar-LB' : 'en-US', { year: 'numeric', month: 'long' });
-                    months.add(JSON.stringify({ key: monthKey, name: monthName }));
+                    monthsSet.add(JSON.stringify({ key: monthKey, name: monthName }));
+                    
+                    // اليوم
+                    const dayKey = order.date;  // YYYY-MM-DD
+                    const dayName = date.toLocaleDateString(document.documentElement.getAttribute('data-lang') === 'ar' ? 'ar-LB' : 'en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                    daysSet.add(JSON.stringify({ key: dayKey, name: dayName }));
                 }
             });
             
+            // شهور
             monthSelector.innerHTML = '<option value="all" data-lang-ar="كل الشهور" data-lang-en="All Months">كل الشهور</option>';
-            
-            Array.from(months).sort().reverse().forEach(monthJson => {
+            Array.from(monthsSet).sort().reverse().forEach(monthJson => {
                 const month = JSON.parse(monthJson);
                 const option = document.createElement('option');
                 option.value = month.key;
                 option.textContent = month.name;
                 monthSelector.appendChild(option);
+            });
+            
+            // أيام
+            dayTourSelect.innerHTML = '<option value="all" data-lang-ar="كل الأيام" data-lang-en="All days">كل الأيام</option>';
+            Array.from(daysSet).sort().reverse().forEach(dayJson => {
+                const day = JSON.parse(dayJson);
+                const option = document.createElement('option');
+                option.value = day.key;
+                option.textContent = day.name;
+                dayTourSelect.appendChild(option);
             });
         }
 
@@ -1275,6 +1334,10 @@
             totalInvoicesSumSpan.innerText = totalValue.toLocaleString() + ' ل.ل';
             totalVegetableSumSpan.innerText = totalVegetable.toLocaleString();
             totalChargeSumSpan.innerText = totalCharge.toLocaleString() + ' ل.ل';
+            
+            // تحديث عداد جولة اليوم
+            const filtered = filterOrders();
+            dayTourCount.innerText = filtered.length;
         }
 
         // ================== حساب بعد الشارج ==================
@@ -1284,7 +1347,7 @@
             return invoiceVal - chargeVal;
         }
 
-        // ================== تصفية الطلبات ==================
+        // ================== تصفية الطلبات (مع اليوم المحدد) ==================
         function filterOrders() {
             return orders.filter(order => {
                 // تصفية النص
@@ -1308,6 +1371,9 @@
                     if (orderMonth !== selectedMonth) return false;
                 }
                 
+                // تصفية اليوم (جولة اليوم)
+                if (selectedDay !== 'all' && order.date !== selectedDay) return false;
+                
                 return true;
             });
         }
@@ -1327,7 +1393,6 @@
                 const invoiceVal = parseFloat(order.invoice) || 0;
                 const chargeVal = parseFloat(order.charge) || 0;
                 
-                // بعد الشارج
                 const afterCharge = calculateAfterCharge(invoiceVal, chargeVal);
 
                 tr.innerHTML = `
@@ -1353,7 +1418,7 @@
 
             attachRowEvents();
             updateStats();
-            populateMonths();
+            populateMonthsAndDays(); // لإضافة أيام جديدة إن وجدت
         }
 
         // ================== ربط أحداث الجدول ==================
@@ -1586,15 +1651,21 @@
             fileInput.value = '';
         });
 
-        // ================== المساعد الذكي ==================
+        // ================== المساعد الذكي (روبوت المحادثة) ==================
         function processAssistantCommand(command) {
             const lang = document.documentElement.getAttribute('data-lang');
             const lowerCmd = command.toLowerCase();
             
             assistantResponse.style.display = 'block';
             
+            // أمر المساعدة / كيف أستخدم التطبيق؟
+            if (lowerCmd.includes('كيف أستخدم') || lowerCmd.includes('how to use') || lowerCmd.includes('مساعدة') || lowerCmd.includes('help')) {
+                assistantResponse.textContent = lang === 'ar'
+                    ? '📘 يمكنك إضافة طلب بالضغط على "إضافة طلب"، أو استخدام الأوامر الصوتية. اختر كاشير من الأعلى، وصفي الفواتير بالأزرار. لجولة اليوم اختر تاريخاً محدداً.'
+                    : '📘 You can add an order by clicking "Add Order", or use voice commands. Select a cashier above, filter invoices with buttons. For day tour, pick a specific date.';
+            }
             // أوامر الإضافة
-            if (lowerCmd.includes('اضف طلب') || lowerCmd.includes('add order')) {
+            else if (lowerCmd.includes('اضف طلب') || lowerCmd.includes('add order')) {
                 orders.push({ 
                     date: new Date().toISOString().split('T')[0],
                     customer: lang === 'ar' ? 'زبون جديد' : 'New Customer', 
@@ -1609,7 +1680,6 @@
                 renderOrders();
                 assistantResponse.textContent = lang === 'ar' ? '✅ تم إضافة طلب جديد' : '✅ New order added';
             }
-            
             // أوامر المسح
             else if (lowerCmd.includes('امسح الكل') || lowerCmd.includes('clear all')) {
                 if (confirm(lang === 'ar' ? 'هل أنت متأكد؟' : 'Are you sure?')) {
@@ -1619,7 +1689,6 @@
                     assistantResponse.textContent = lang === 'ar' ? '✅ تم مسح جميع البيانات' : '✅ All data cleared';
                 }
             }
-            
             // أوامر الإحصائيات
             else if (lowerCmd.includes('احصائيات') || lowerCmd.includes('statistics') || lowerCmd.includes('stats')) {
                 let total = 0;
@@ -1632,20 +1701,11 @@
                     ? `📊 الفواتير: ${orders.length} - الإجمالي: ${total.toLocaleString()} ل.ل - الخضرة: ${vegetable.toLocaleString()}`
                     : `📊 Invoices: ${orders.length} - Total: ${total.toLocaleString()} L.L - Vegetable: ${vegetable.toLocaleString()}`;
             }
-            
             // أوامر التصدير
             else if (lowerCmd.includes('تصدير') || lowerCmd.includes('export')) {
                 exportToGoogleSheets();
                 assistantResponse.textContent = lang === 'ar' ? '📤 جاري التصدير...' : '📤 Exporting...';
             }
-            
-            // أوامر المساعدة
-            else if (lowerCmd.includes('مساعدة') || lowerCmd.includes('help')) {
-                assistantResponse.textContent = lang === 'ar'
-                    ? 'الأوامر: اضف طلب - امسح الكل - احصائيات - تصدير - سعر الصرف [القيمة] - بحث [النص]'
-                    : 'Commands: add order - clear all - statistics - export - set rate [value] - search [text]';
-            }
-            
             // أوامر سعر الصرف
             else if (lowerCmd.includes('سعر الصرف') || lowerCmd.includes('set rate')) {
                 const match = lowerCmd.match(/\d+/);
@@ -1658,7 +1718,6 @@
                         : `💰 Rate set to: ${dollarRate}`;
                 }
             }
-            
             // أوامر البحث
             else if (lowerCmd.includes('بحث') || lowerCmd.includes('search')) {
                 const searchTerm = command.replace(/بحث|search/i, '').trim();
@@ -1669,14 +1728,12 @@
                     ? `🔍 جاري البحث عن: ${searchTerm}`
                     : `🔍 Searching for: ${searchTerm}`;
             }
-            
             else {
                 assistantResponse.textContent = lang === 'ar'
-                    ? '❌ الأمر غير معروف. اكتب "مساعدة" لمعرفة الأوامر'
-                    : '❌ Unknown command. Type "help" for available commands';
+                    ? '❌ الأمر غير معروف. اكتب "مساعدة" أو "كيف أستخدم التطبيق" لمعرفة الأوامر'
+                    : '❌ Unknown command. Type "help" or "how to use" for available commands';
             }
             
-            // إخفاء الرد بعد 5 ثواني
             setTimeout(() => {
                 assistantResponse.style.display = 'none';
             }, 5000);
@@ -1761,6 +1818,12 @@
             renderOrders();
         });
 
+        // ================== جولة اليوم ==================
+        dayTourSelect.addEventListener('change', (e) => {
+            selectedDay = e.target.value;
+            renderOrders();
+        });
+
         // ================== الإحصائيات المتقدمة ==================
         function updateAdvancedStats() {
             let totalInvoices = orders.length;
@@ -1784,7 +1847,6 @@
             statNetWithoutCharge.textContent = netWithoutCharge.toLocaleString() + ' ل.ل';
             statAverageInvoice.textContent = averageInvoice.toLocaleString() + ' ل.ل';
             
-            // رسم بياني
             if (statsChart) {
                 statsChart.destroy();
             }
@@ -1868,23 +1930,19 @@
         function exportToGoogleSheets() {
             const lang = document.documentElement.getAttribute('data-lang');
             
-            // تجهيز البيانات
             let csvContent = "data:text/csv;charset=utf-8,";
             
-            // إضافة رأس التقرير
             const today = new Date().toLocaleDateString(lang === 'ar' ? 'ar-LB' : 'en-US');
             csvContent += lang === 'ar' ? `تقرير ترصيد,${today}\n` : `Balance Report,${today}\n`;
             csvContent += lang === 'ar' ? "الكاشير," + currentCashier + "\n" : "Cashier," + currentCashier + "\n";
             csvContent += "\n";
             
-            // إضافة عناوين الأعمدة
             if (lang === 'ar') {
                 csvContent += "التاريخ,الزبون,قيمة الفاتورة,الشارج,بعد الشارج,صرافة $,قيمة الخضرة,الدلفري,تم الدفع\n";
             } else {
                 csvContent += "Date,Customer,Invoice Amount,Charge,After Charge,Exchange $,Vegetable Value,Delivery,Paid\n";
             }
             
-            // إضافة البيانات
             orders.forEach(order => {
                 const afterCharge = calculateAfterCharge(order.invoice, order.charge);
                 const row = [
@@ -1901,7 +1959,6 @@
                 csvContent += row.join(",") + "\n";
             });
             
-            // إضافة ملخص
             let totalSales = 0;
             let totalCharge = 0;
             let totalVegetable = 0;
@@ -1920,7 +1977,6 @@
             csvContent += lang === 'ar' ? `إجمالي الخضرة,${totalVegetable}\n` : `Total Vegetable,${totalVegetable}\n`;
             csvContent += lang === 'ar' ? `الصافي (بدون شارج),${totalSales - totalCharge} ل.ل\n` : `Net (No Charge),${totalSales - totalCharge} L.L\n`;
             
-            // إنشاء رابط التحميل
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
