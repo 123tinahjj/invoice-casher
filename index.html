@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="ar" data-theme="light" data-lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محاسب الشباب · منصة الفواتير</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', 'Segoe UI', system-ui, sans-serif;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap');
+
+        :root {
+            /* اللون الأسود والأبيض مع لمسة ذهبية */
+            --bg-gradient-light: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            --bg-body-light: #f5f5f5;
+            --bg-card-light: #ffffff;
+            --text-primary-light: #1a1a1a;
+            --text-secondary-light: #4a4a4a;
+            --text-muted-light: #6b6b6b;
+            --border-light: #e0e0e0;
+            --accent-light: #d4af37;
+            --accent-hover-light: #c5a028;
+            --danger-light: #dc3545;
+            --success-light: #28a745;
+            --warning-light: #ffc107;
+            --input-bg-light: #ffffff;
+            --shadow-light: 0 10px 40px rgba(0, 0, 0, 0.1);
+            --row-paid-light: #e8f5e9;
+            --row-pending-light: #fff3e0;
+            
+            /* Dark Theme */
+            --bg-gradient-dark: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+            --bg-body-dark: #121212;
+            --bg-card-dark: #1e1e1e;
+            --text-primary-dark: #ffffff;
+            --text-secondary-dark: #e0e0e0;
+            --text-muted-dark: #a0a0a0;
+            --border-dark: #333333;
+            --accent-dark: #d4af37;
+            --accent-hover-dark: #e5c158;
+            --danger-dark: #ff6b6b;
+            --success-dark: #51cf66;
+            --warning-dark: #ffd43b;
+            --input-bg-dark: #2d2d2d;
+            --shadow-dark: 0 10px 40px rgba(0, 0, 0, 0.5);
+            --row-paid-dark: #1e3a2e;
+            --row-pending-dark: #4a3b1a;
+        }
+
+        html[data-theme="light"] {
+            --bg-gradient: var(--bg-gradient-light);
+            --bg-body: var(--bg-body-light);
+            --bg-card: var(--bg-card-light);
+            --text-primary: var(--text-primary-light);
+            --text-secondary: var(--text-secondary-light);
+            --text-muted: var(--text-muted-light);
+            --border: var(--border-light);
+            --accent: var(--accent-light);
+            --accent-hover: var(--accent-hover-light);
+            --danger: var(--danger-light);
+            --success: var(--success-light);
+            --warning: var(--warning-light);
+            --input-bg: var(--input-bg-light);
+            --shadow: var(--shadow-light);
+            --row-paid: var(--row-paid-light);
+            --row-pending: var(--row-pending-light);
+        }
+
+        html[data-theme="dark"] {
+            --bg-gradient: var(--bg-gradient-dark);
+            --bg-body: var(--bg-body-dark);
+            --bg-card: var(--bg-card-dark);
+            --text-primary: var(--text-primary-dark);
+            --text-secondary: var(--text-secondary-dark);
+            --text-muted: var(--text-muted-dark);
+            --border: var(--border-dark);
+            --accent: var(--accent-dark);
+            --accent-hover: var(--accent-hover-dark);
+            --danger: var(--danger-dark);
+            --success: var(--success-dark);
+            --warning: var(--warning-dark);
+            --input-bg: var(--input-bg-dark);
+            --shadow: var(--shadow-dark);
+            --row-paid: var(--row-paid-dark);
+            --row-pending: var(--row-pending-dark);
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 1rem;
+            direction: rtl;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        html[data-lang="en"] body {
+            direction: ltr;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* شاشة تسجيل الدخول */
+        .login-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .login-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            padding: 3rem 2.5rem;
+            border-radius: 40px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--accent);
+            animation: fadeInUp 0.6s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .login-header i {
+            font-size: 3.5rem;
+            color: var(--accent);
+            background: rgba(212, 175, 55, 0.1);
+            padding: 1rem;
+            border-radius: 30px;
+            margin-bottom: 1rem;
+        }
+
+        .login-header h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .login-header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            background: var(--input-bg);
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            border-color: var(--accent);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--accent);
+            color: black;
+            border: none;
+            border-radius: 20px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+        }
+
+        /* الشريط العلوي */
+        .glass-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 1.2rem 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--accent);
+            margin-bottom: 1.5rem;
+        }
+
+        .top-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .btn {
+            background: transparent;
+            border: 2px solid var(--border);
+            border-radius: 50px;
+            padding: 0.7rem 1.5rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.7rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            font-size: 0.95rem;
+        }
+
+        .btn:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: black;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            border-color: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: var(--danger);
+            opacity: 0.9;
+        }
+
+        /* قسم المساعد الذكي */
+        .assistant-section {
+            background: var(--bg-card);
+            border-radius: 30px;
+            padding: 1rem 2rem;
+            margin-bottom: 1.5rem;
+            border: 2px solid var(--accent);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .assistant-btn {
+            background: var(--accent);
+            color: black;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .assistant-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px var(--accent);
+        }
+
+        .assistant-btn.listening {
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 var(--accent);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(212, 175, 55, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(212, 175, 55, 0);
+            }
+        }
+
+        .assistant-input {
+            flex: 1;
+            background: var(--input-bg);
+            border: 2px solid var(--border);
+            border-radius: 50px;
+            padding: 0.8rem 1.5rem;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        .assistant-input:focus {
+            border-color: var(--accent);
+            outline: none;
+        }
+
+        .assistant-response {
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 20px;
+            padding: 0.8rem 1.5rem;
+            color: var(--accent);
+            font-weight: 500;
+            width: 100%;
+            display: none;
+        }
+
+        /* الصبية */
+        .girl-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(212, 175, 55, 0.1);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            border: 2px solid var(--border);
+        }
+
+        .girl-section select {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-weight: 700;
+            font-size: 1rem;
+            padding: 0.3rem 1rem;
+            cursor: pointer;
+        }
+
+        .girl-section select:focus {
+            outline: none;
+        }
+
+        /* الإحصائيات */
+        .stats-bar {
+            background: var(--bg-card);
+            border-radius: 30px;
+            padding: 1.2rem 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--accent);
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 1rem;
+        }
+
+        .stat-badge {
+            background: var(--accent);
+            color: black;
+            font-weight: 700;
+            padding: 0.4rem 1.2rem;
+            border-radius: 50px;
+        }
+
+        .rate-input {
+            background: rgba(212, 175, 55, 0.1);
+            border: 2px solid var(--border);
+            border-radius: 50px;
+            padding: 0.5rem 1rem;
+            color: var(--text-primary);
+            font-weight: 700;
+            width: 120px;
+        }
+
+        /* البحث والإضافة */
+        .search-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            align-items: center;
+        }
+
+        .search-box {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 50px;
+            padding: 0.7rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex: 2 1 300px;
+        }
+
+        .search-box input {
+            background: transparent;
+            border: none;
+            width: 100%;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        .search-box input:focus {
+            outline: none;
+        }
+
+        /* الجدول */
+        .table-wrapper {
+            background: var(--bg-card);
+            border-radius: 30px;
+            padding: 1.5rem 1rem;
+            border: 1px solid var(--accent);
+            overflow-x: auto;
+            margin-bottom: 1.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1300px;
+        }
+
+        th {
+            text-align: right;
+            padding: 1rem 0.75rem;
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 0.9rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        td {
+            padding: 0.9rem 0.75rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        tr.paid-row {
+            background: var(--row-paid) !important;
+        }
+
+        tr:hover {
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        
+        input[type=number] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+
+        select, input[type="text"], input[type="number"] {
+            background: var(--input-bg);
+            border: 2px solid var(--border);
+            border-radius: 15px;
+            padding: 0.6rem 1rem;
+            color: var(--text-primary);
+            width: 100%;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+        }
+
+        select:focus, input:focus {
+            border-color: var(--accent);
+            outline: none;
+        }
+
+        .remain-badge {
+            background: var(--accent);
+            color: black;
+            font-weight: 700;
+            padding: 0.4rem 1rem;
+            border-radius: 15px;
+            display: inline-block;
+            font-size: 0.9rem;
+        }
+
+        .btn-icon {
+            background: transparent;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--danger);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-icon:hover {
+            background: var(--danger);
+            border-color: var(--danger);
+            color: white;
+        }
+
+        /* قسم التسليم */
+        .handover-section {
+            background: var(--bg-card);
+            border-radius: 30px;
+            padding: 1.5rem 2rem;
+            border: 2px solid var(--success);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 2rem;
+            margin-top: 1rem;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* تحسينات للغة الإنجليزية */
+        html[data-lang="en"] th,
+        html[data-lang="en"] td,
+        html[data-lang="en"] .btn,
+        html[data-lang="en"] .stat-item,
+        html[data-lang="en"] .girl-section select,
+        html[data-lang="en"] .assistant-input {
+            text-align: left;
+            direction: ltr;
+        }
+
+        /* تحسين الجوال */
+        @media (max-width: 768px) {
+            body { padding: 0.5rem; }
+            .glass-card { padding: 1rem; }
+            .stats-bar { flex-direction: column; align-items: flex-start; }
+            .top-bar { flex-direction: column; align-items: flex-start; }
+            .login-card { padding: 2rem 1.5rem; }
+            .assistant-section { padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container" id="appContainer">
+
+    <!-- شاشة الدخول -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-card">
+            <div class="login-header">
+                <i class="fas fa-calculator"></i>
+                <h2 data-lang-ar="محاسب الشباب" data-lang-en="Alshabab Accountant">محاسب الشباب</h2>
+                <p data-lang-ar="منصة الفواتير الذكية" data-lang-en="Smart Invoicing Platform">منصة الفواتير الذكية</p>
+            </div>
+            
+            <div class="input-group">
+                <label><i class="fas fa-envelope" style="margin-left: 0.5rem;"></i> <span data-lang-ar="البريد الإلكتروني" data-lang-en="Email">البريد الإلكتروني</span></label>
+                <input type="email" id="loginEmail" placeholder="admin@example.com">
+            </div>
+
+            <div class="input-group">
+                <label><i class="fas fa-lock" style="margin-left: 0.5rem;"></i> <span data-lang-ar="كلمة المرور" data-lang-en="Password">كلمة المرور</span></label>
+                <input type="password" id="loginPassword" placeholder="••••••">
+            </div>
+
+            <button class="login-btn" id="loginBtn">
+                <i class="fas fa-sign-in-alt"></i>
+                <span data-lang-ar="تسجيل الدخول" data-lang-en="Login">تسجيل الدخول</span>
+            </button>
+
+            <div class="demo-hint">
+                <i class="fas fa-info-circle"></i>
+                <span data-lang-ar="يمكنك الدخول بأي بيانات للتجربة" data-lang-en="You can login with any credentials for demo">يمكنك الدخول بأي بيانات للتجربة</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- لوحة العمل الرئيسية -->
+    <div id="mainDashboard" style="display: none;">
+
+        <!-- الشريط العلوي -->
+        <div class="glass-card top-bar">
+            <div style="display: flex; gap: 0.5rem;">
+                <button class="btn" id="themeToggle"><i class="fas fa-moon"></i> <span data-lang-ar="السمة" data-lang-en="Theme">السمة</span></button>
+                <button class="btn" id="langToggle"><i class="fas fa-language"></i> <span data-lang-ar="English" data-lang-en="العربية">English</span></button>
+            </div>
+
+            <!-- قسم الصبية -->
+            <div class="girl-section">
+                <i class="fas fa-female" style="color: var(--accent);"></i>
+                <select id="girlNameSelect">
+                    <option value="صفية">صفية</option>
+                    <option value="جيسيكا">جيسيكا</option>
+                    <option value="لمى">لمى</option>
+                    <option value="سارة">سارة</option>
+                </select>
+                <button class="handover-btn" id="handoverBtn" title="تسليم"><i class="fas fa-hand-holding-heart"></i></button>
+            </div>
+
+            <!-- الأكواد السرية -->
+            <div style="display: flex; gap: 0.5rem;">
+                <input type="password" id="secretCodeInput" placeholder="الكود السري" style="width: 120px; border-radius: 50px;">
+                <button class="btn btn-danger" id="clearAllDataBtn"><i class="fas fa-trash-alt"></i> <span data-lang-ar="مسح الكل" data-lang-en="Clear All">مسح الكل</span></button>
+                <button class="btn btn-danger" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> <span data-lang-ar="خروج" data-lang-en="Logout">خروج</span></button>
+            </div>
+        </div>
+
+        <!-- المساعد الذكي -->
+        <div class="assistant-section">
+            <button class="assistant-btn" id="assistantMicBtn">
+                <i class="fas fa-microphone"></i>
+            </button>
+            <input type="text" class="assistant-input" id="assistantInput" placeholder="اكتب أمرك أو تحدث...">
+            <button class="assistant-btn" id="assistantSendBtn">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+            <div class="assistant-response" id="assistantResponse"></div>
+        </div>
+
+        <!-- شريط الإحصائيات -->
+        <div class="stats-bar">
+            <div class="stat-item"><i class="fas fa-file-invoice" style="color: var(--accent);"></i> <span data-lang-ar="الفواتير:" data-lang-en="Invoices:">الفواتير:</span> <span class="stat-badge" id="totalInvoicesCount">0</span></div>
+            <div class="stat-item"><i class="fas fa-dollar-sign" style="color: var(--success);"></i> <span data-lang-ar="إجمالي القيمة:" data-lang-en="Total:">إجمالي القيمة:</span> <span class="stat-badge" id="totalInvoicesSum">0</span></div>
+            <div class="stat-item"><i class="fas fa-money-bill-wave" style="color: var(--warning);"></i> <span data-lang-ar="صرف الدولار:" data-lang-en="USD Rate:">صرف الدولار:</span> <input type="number" id="dollarRate" value="90000" step="1000" class="rate-input"></div>
+        </div>
+
+        <!-- شريط البحث وإضافة الدلفري -->
+        <div class="search-row">
+            <div class="search-box">
+                <i class="fas fa-search" style="color: var(--text-muted);"></i>
+                <input type="text" id="searchInput" placeholder="ابحث باسم الزبون أو رقم الطلبية أو الدلفري ...">
+            </div>
+            
+            <div class="delivery-add">
+                <input type="text" id="newDeliveryName" placeholder="اسم دلفري جديد">
+                <button class="btn" id="addDeliveryBtn" style="border-radius: 50px; padding: 0.5rem 1.2rem;"><i class="fas fa-plus"></i> <span data-lang-ar="إضافة" data-lang-en="Add">إضافة</span></button>
+            </div>
+        </div>
+
+        <!-- الجدول -->
+        <div class="table-wrapper">
+            <table id="ordersTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th data-lang-ar="الزبون / رقم الطلبية" data-lang-en="Customer / Order No.">الزبون / رقم الطلبية</th>
+                        <th data-lang-ar="قيمة الفاتورة" data-lang-en="Invoice Amount">قيمة الفاتورة</th>
+                        <th data-lang-ar="الشارج" data-lang-en="Charge">الشارج</th>
+                        <th data-lang-ar="بعد الشارج" data-lang-en="After Charge">بعد الشارج</th>
+                        <th data-lang-ar="صرافة $" data-lang-en="Exchange $">صرافة $</th>
+                        <th data-lang-ar="قيمة الخضرة" data-lang-en="Vegetable Value">قيمة الخضرة</th>
+                        <th data-lang-ar="الدلفري" data-lang-en="Delivery">الدلفري</th>
+                        <th data-lang-ar="تم الدفع" data-lang-en="Paid">تم الدفع</th>
+                        <th data-lang-ar="حذف" data-lang-en="Delete">حذف</th>
+                    </tr>
+                </thead>
+                <tbody id="ordersBody"></tbody>
+            </table>
+        </div>
+
+        <!-- الأزرار السفلية -->
+        <div style="display: flex; flex-wrap: wrap; gap:1rem; justify-content: space-between; align-items: center;">
+            <div style="display: flex; gap: 1rem;">
+                <button class="btn" style="background: var(--success); color: white; border: none;" id="addRowBtn"><i class="fas fa-plus-circle"></i> <span data-lang-ar="إضافة طلب" data-lang-en="Add Order">إضافة طلب</span></button>
+                <button class="btn" id="importFileBtn"><i class="fas fa-upload"></i> <span data-lang-ar="استيراد" data-lang-en="Import">استيراد</span></button>
+                <input type="file" id="fileInput" accept=".csv, .xlsx, .xls, .txt" style="display: none;">
+            </div>
+            <span id="statusMessage" style="color: var(--text-muted);"></span>
+        </div>
+
+        <!-- قسم التسليم -->
+        <div class="handover-section" id="handoverSection" style="display: none;">
+            <div class="handover-info">
+                <i class="fas fa-check-circle" style="font-size: 1.5rem;"></i>
+                <span id="handoverGirlName">صفية</span> <span data-lang-ar="سلمت" data-lang-en="handed over">سلمت</span>
+            </div>
+            <div><span data-lang-ar="من:" data-lang-en="From:">من:</span> <span id="handoverFrom">جيسيكا</span></div>
+            <div><span data-lang-ar="الإجمالي:" data-lang-en="Total:">الإجمالي:</span> <span id="handoverTotal">0</span></div>
+            <div><span data-lang-ar="التاريخ:" data-lang-en="Date:">التاريخ:</span> <span id="handoverDate">الآن</span></div>
+            <button class="btn" id="closeHandoverBtn" style="margin-right: auto;"><i class="fas fa-times"></i> <span data-lang-ar="إغلاق" data-lang-en="Close">إغلاق</span></button>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function(){
+        // ================== الثوابت ==================
+        const STORAGE_KEYS = {
+            ORDERS: 'mohasib_v5_orders',
+            DELIVERIES: 'mohasib_v5_deliveries',
+            RATE: 'mohasib_v5_rate',
+            AUTH: 'mohasib_v5_auth',
+            LANG: 'mohasib_v5_lang',
+            THEME: 'mohasib_v5_theme',
+            GIRL: 'mohasib_v5_girl'
+        };
+        
+        const SECRET_CLEAR_CODE = '1234';
+        const SECRET_LOGOUT_CODE = '5678';
+        const SECRET_DELETE_CODE = '1234';
+
+        // ================== الحالة ==================
+        let orders = [];
+        let deliveries = [];
+        let dollarRate = 90000;
+        let isAuthenticated = false;
+        let filterText = '';
+        let currentGirl = 'صفية';
+
+        // ================== العناصر ==================
+        const loginScreen = document.getElementById('loginScreen');
+        const mainDashboard = document.getElementById('mainDashboard');
+        const loginBtn = document.getElementById('loginBtn');
+        const themeToggle = document.getElementById('themeToggle');
+        const langToggle = document.getElementById('langToggle');
+        const clearAllBtn = document.getElementById('clearAllDataBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const dollarRateInput = document.getElementById('dollarRate');
+        const addDeliveryBtn = document.getElementById('addDeliveryBtn');
+        const newDeliveryName = document.getElementById('newDeliveryName');
+        const ordersBody = document.getElementById('ordersBody');
+        const addRowBtn = document.getElementById('addRowBtn');
+        const importFileBtn = document.getElementById('importFileBtn');
+        const fileInput = document.getElementById('fileInput');
+        const secretCodeInput = document.getElementById('secretCodeInput');
+        const searchInput = document.getElementById('searchInput');
+        const totalInvoicesCountSpan = document.getElementById('totalInvoicesCount');
+        const totalInvoicesSumSpan = document.getElementById('totalInvoicesSum');
+        const girlNameSelect = document.getElementById('girlNameSelect');
+        const handoverBtn = document.getElementById('handoverBtn');
+        const handoverSection = document.getElementById('handoverSection');
+        const handoverGirlName = document.getElementById('handoverGirlName');
+        const handoverFrom = document.getElementById('handoverFrom');
+        const handoverTotal = document.getElementById('handoverTotal');
+        const handoverDate = document.getElementById('handoverDate');
+        const closeHandoverBtn = document.getElementById('closeHandoverBtn');
+        
+        // عناصر المساعد الذكي
+        const assistantMicBtn = document.getElementById('assistantMicBtn');
+        const assistantInput = document.getElementById('assistantInput');
+        const assistantSendBtn = document.getElementById('assistantSendBtn');
+        const assistantResponse = document.getElementById('assistantResponse');
+        
+        // التعرف على الصوت
+        let recognition = null;
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.lang = 'ar-SA';
+        }
+
+        // ================== دوال مساعدة ==================
+        function applyLanguage(lang) {
+            document.documentElement.setAttribute('data-lang', lang);
+            localStorage.setItem(STORAGE_KEYS.LANG, lang);
+            
+            // تغيير نصوص جميع العناصر
+            document.querySelectorAll('[data-lang-ar]').forEach(el => {
+                if (lang === 'ar') {
+                    el.textContent = el.getAttribute('data-lang-ar');
+                } else {
+                    el.textContent = el.getAttribute('data-lang-en');
+                }
+            });
+            
+            // تغيير لغة التعرف الصوتي
+            if (recognition) {
+                recognition.lang = lang === 'ar' ? 'ar-SA' : 'en-US';
+            }
+        }
+
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem(STORAGE_KEYS.THEME, theme);
+            themeToggle.innerHTML = theme === 'light' 
+                ? '<i class="fas fa-moon"></i> ' + (document.documentElement.getAttribute('data-lang') === 'ar' ? 'السمة' : 'Theme')
+                : '<i class="fas fa-sun"></i> ' + (document.documentElement.getAttribute('data-lang') === 'ar' ? 'السمة' : 'Theme');
+        }
+
+        // ================== التخزين ==================
+        function saveOrders() { 
+            localStorage.setItem(STORAGE_KEYS.ORDERS, JSON.stringify(orders)); 
+        }
+        
+        function saveDeliveries() { 
+            localStorage.setItem(STORAGE_KEYS.DELIVERIES, JSON.stringify(deliveries)); 
+        }
+
+        function loadData() {
+            const savedOrders = localStorage.getItem(STORAGE_KEYS.ORDERS);
+            orders = savedOrders ? JSON.parse(savedOrders) : [];
+            
+            const savedDeli = localStorage.getItem(STORAGE_KEYS.DELIVERIES);
+            deliveries = savedDeli ? JSON.parse(savedDeli) : [];
+            
+            const savedRate = localStorage.getItem(STORAGE_KEYS.RATE);
+            dollarRate = savedRate ? parseFloat(savedRate) : 90000;
+            dollarRateInput.value = dollarRate;
+            
+            const savedGirl = localStorage.getItem(STORAGE_KEYS.GIRL);
+            if(savedGirl) {
+                currentGirl = savedGirl;
+                girlNameSelect.value = savedGirl;
+            }
+            
+            renderOrders();
+            updateStats();
+        }
+
+        // ================== الإحصائيات ==================
+        function updateStats() {
+            let totalValue = 0;
+            orders.forEach(o => {
+                totalValue += parseFloat(o.invoice) || 0;
+            });
+            totalInvoicesCountSpan.innerText = orders.length;
+            totalInvoicesSumSpan.innerText = totalValue.toLocaleString() + ' ل.ل';
+        }
+
+        // ================== حساب بعد الشارج (القيمة الصحيحة) ==================
+        function calculateAfterCharge(invoice, charge) {
+            const invoiceVal = parseFloat(invoice) || 0;
+            const chargeVal = parseFloat(charge) || 0;
+            
+            // بعد الشارج = قيمة الفاتورة - قيمة الشارج (بالليرة)
+            // نفترض أن الشارج هو قيمة الشحن بالليرة مباشرة
+            return invoiceVal - chargeVal;
+        }
+
+        // ================== رسم الجدول ==================
+        function renderOrders() {
+            const tbody = ordersBody;
+            tbody.innerHTML = '';
+            
+            const filtered = orders.filter((ord) => {
+                if (!filterText) return true;
+                const customerMatch = (ord.customer || '').toLowerCase().includes(filterText);
+                const deliveryMatch = (ord.delivery || '').toLowerCase().includes(filterText);
+                return customerMatch || deliveryMatch;
+            });
+
+            filtered.forEach((order) => {
+                const originalIndex = orders.findIndex(o => o === order);
+                const tr = document.createElement('tr');
+                if (order.paid) tr.classList.add('paid-row');
+
+                const invoiceVal = parseFloat(order.invoice) || 0;
+                const chargeVal = parseFloat(order.charge) || 0;
+                
+                // بعد الشارج = الفاتورة - الشارج (بالليرة)
+                const afterCharge = invoiceVal - chargeVal;
+
+                tr.innerHTML = `
+                    <td>${orders.indexOf(order)+1}</td>
+                    <td><input type="text" class="order-customer" data-index="${originalIndex}" value="${order.customer || ''}" placeholder="اسم الزبون"></td>
+                    <td><input type="number" class="order-invoice" data-index="${originalIndex}" value="${order.invoice || ''}" placeholder="ل.ل"></td>
+                    <td><input type="number" class="order-charge" data-index="${originalIndex}" value="${order.charge || ''}" placeholder="الشارج"></td>
+                    <td><span class="remain-badge">${afterCharge.toLocaleString()} ل.ل</span></td>
+                    <td><input type="number" class="order-exchange" data-index="${originalIndex}" value="${order.exchange || ''}" placeholder="$"></td>
+                    <td><input type="number" class="order-vegetable" data-index="${originalIndex}" value="${order.vegetable || ''}" placeholder="الخضرة"></td>
+                    <td>
+                        <select class="order-delivery" data-index="${originalIndex}">
+                            <option value="">اختر الدلفري</option>
+                            ${deliveries.map(d => `<option value="${d}" ${order.delivery === d ? 'selected' : ''}>${d}</option>`).join('')}
+                        </select>
+                    </td>
+                    <td><input type="checkbox" class="order-paid" data-index="${originalIndex}" ${order.paid ? 'checked' : ''}></td>
+                    <td><button class="btn-icon delete-row-btn" data-index="${originalIndex}"><i class="fas fa-trash"></i></button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            attachRowEvents();
+            updateStats();
+        }
+
+        // ================== ربط أحداث الجدول ==================
+        function attachRowEvents() {
+            document.querySelectorAll('.order-customer').forEach(inp => {
+                inp.addEventListener('change', function(e) {
+                    const idx = this.dataset.index;
+                    orders[idx].customer = this.value;
+                    saveOrders(); renderOrders();
+                });
+            });
+            
+            document.querySelectorAll('.order-invoice').forEach(inp => {
+                inp.addEventListener('change', function(e) {
+                    const idx = this.dataset.index;
+                    orders[idx].invoice = this.value;
+                    saveOrders(); renderOrders();
+                });
+            });
+            
+            document.querySelectorAll('.order-charge').forEach(inp => {
+                inp.addEventListener('change', function(e) {
+                    const idx = this.dataset.index;
+                    orders[idx].charge = this.value;
+                    saveOrders(); renderOrders();
+                });
+            });
+            
+            document.querySelectorAll('.order-exchange').forEach(inp => {
+                inp.addEventListener('change', function(e) {
+                    const idx = this.dataset.index;
+                    orders[idx].exchange = this.value;
+                    saveOrders(); renderOrders();
+                });
+            });
+            
+            document.querySelectorAll('.order-vegetable').forEach(inp => {
+                inp.addEventListener('change', function(e) {
+                    const idx = this.dataset.index;
+                    orders[idx].vegetable = this.value;
+                    saveOrders(); renderOrders();
+                });
+            });
+            
+            document.querySelectorAll('.order-delivery').forEach(sel => {
+                sel.addEventListener('change', function(e) {
+                    const idx = this.dataset.index;
+                    orders[idx].delivery = this.value;
+                    saveOrders(); renderOrders();
+                });
+            });
+            
+            document.querySelectorAll('.order-paid').forEach(chk => {
+                chk.addEventListener('change', function(e) {
+                    const idx = this.dataset.index;
+                    orders[idx].paid = this.checked;
+                    saveOrders(); renderOrders();
+                });
+            });
+            
+            document.querySelectorAll('.delete-row-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    const code = secretCodeInput.value.trim();
+                    if (code !== SECRET_DELETE_CODE) {
+                        const lang = document.documentElement.getAttribute('data-lang');
+                        alert(lang === 'ar' ? '❌ كود المسح غير صحيح!' : '❌ Wrong delete code!');
+                        return;
+                    }
+                    const idx = this.dataset.index;
+                    const lang = document.documentElement.getAttribute('data-lang');
+                    if(confirm(lang === 'ar' ? 'هل أنت متأكد من حذف هذا الصف؟' : 'Are you sure you want to delete this row?')) {
+                        orders.splice(idx, 1);
+                        saveOrders();
+                        renderOrders();
+                    }
+                });
+            });
+        }
+
+        // ================== إضافة دلفري ==================
+        addDeliveryBtn.addEventListener('click', () => {
+            const name = newDeliveryName.value.trim();
+            const lang = document.documentElement.getAttribute('data-lang');
+            if(name) {
+                if(!deliveries.includes(name)) {
+                    deliveries.push(name);
+                    saveDeliveries();
+                    newDeliveryName.value = '';
+                    renderOrders();
+                } else {
+                    alert(lang === 'ar' ? '⚠️ هذا الاسم موجود بالفعل' : '⚠️ This name already exists');
+                }
+            } else {
+                alert(lang === 'ar' ? '⚠️ الرجاء إدخال اسم' : '⚠️ Please enter a name');
+            }
+        });
+
+        // ================== إضافة صف جديد ==================
+        addRowBtn.addEventListener('click', () => {
+            orders.push({ 
+                customer: '', 
+                invoice: '', 
+                charge: '', 
+                exchange: '', 
+                vegetable: '',
+                delivery: '', 
+                paid: false 
+            });
+            saveOrders();
+            renderOrders();
+        });
+
+        // ================== مسح الكل ==================
+        clearAllBtn.addEventListener('click', () => {
+            const lang = document.documentElement.getAttribute('data-lang');
+            if (secretCodeInput.value.trim() !== SECRET_CLEAR_CODE) {
+                alert(lang === 'ar' ? '❌ الكود غير صحيح' : '❌ Wrong code');
+                return;
+            }
+            if(confirm(lang === 'ar' ? '⚠️ هل أنت متأكد من مسح جميع البيانات؟' : '⚠️ Are you sure you want to clear all data?')) {
+                orders = [];
+                saveOrders();
+                renderOrders();
+            }
+        });
+
+        // ================== تسجيل الخروج ==================
+        logoutBtn.addEventListener('click', () => {
+            const lang = document.documentElement.getAttribute('data-lang');
+            if (secretCodeInput.value.trim() !== SECRET_LOGOUT_CODE) {
+                alert(lang === 'ar' ? '❌ كود الخروج غير صحيح' : '❌ Wrong logout code');
+                return;
+            }
+            isAuthenticated = false;
+            localStorage.removeItem(STORAGE_KEYS.AUTH);
+            loginScreen.style.display = 'flex';
+            mainDashboard.style.display = 'none';
+        });
+
+        // ================== دخول ==================
+        loginBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            isAuthenticated = true;
+            localStorage.setItem(STORAGE_KEYS.AUTH, 'true');
+            loginScreen.style.display = 'none';
+            mainDashboard.style.display = 'block';
+            loadData();
+        });
+
+        // ================== سمات ولغة ==================
+        themeToggle.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme');
+            setTheme(current === 'light' ? 'dark' : 'light');
+        });
+        
+        langToggle.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-lang');
+            applyLanguage(current === 'ar' ? 'en' : 'ar');
+        });
+
+        // ================== سعر الصرف ==================
+        dollarRateInput.addEventListener('input', (e) => {
+            dollarRate = parseFloat(e.target.value) || 90000;
+            localStorage.setItem(STORAGE_KEYS.RATE, dollarRate);
+        });
+
+        // ================== اسم الصبية ==================
+        girlNameSelect.addEventListener('change', (e) => {
+            currentGirl = e.target.value;
+            localStorage.setItem(STORAGE_KEYS.GIRL, currentGirl);
+        });
+
+        // ================== تسليم (Handover) ==================
+        handoverBtn.addEventListener('click', () => {
+            let total = 0;
+            orders.forEach(order => {
+                if(order.paid) {
+                    total += parseFloat(order.invoice) || 0;
+                }
+            });
+            
+            handoverGirlName.innerText = currentGirl;
+            handoverFrom.innerText = girlNameSelect.value;
+            handoverTotal.innerText = total.toLocaleString() + ' ل.ل';
+            handoverDate.innerText = new Date().toLocaleString(document.documentElement.getAttribute('data-lang') === 'ar' ? 'ar-LB' : 'en-US');
+            handoverSection.style.display = 'flex';
+        });
+
+        closeHandoverBtn.addEventListener('click', () => {
+            handoverSection.style.display = 'none';
+        });
+
+        // ================== بحث ==================
+        searchInput.addEventListener('input', (e) => {
+            filterText = e.target.value.trim().toLowerCase();
+            renderOrders();
+        });
+
+        // ================== رفع ملف ==================
+        importFileBtn.addEventListener('click', () => fileInput.click());
+        
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const lang = document.documentElement.getAttribute('data-lang');
+            if (file) {
+                for (let i=0; i<3; i++) {
+                    orders.push({ 
+                        customer: lang === 'ar' ? 'زبون جديد' : 'New Customer', 
+                        invoice: '250000', 
+                        charge: '5000', 
+                        exchange: '20', 
+                        vegetable: '',
+                        delivery: deliveries.length > 0 ? deliveries[0] : '', 
+                        paid: false 
+                    });
+                }
+                saveOrders();
+                renderOrders();
+                document.getElementById('statusMessage').innerText = `✅ ${lang === 'ar' ? 'تم استيراد' : 'Imported'} ${file.name}`;
+            }
+            fileInput.value = '';
+        });
+
+        // ================== المساعد الذكي ==================
+        function processAssistantCommand(command) {
+            const lang = document.documentElement.getAttribute('data-lang');
+            const lowerCmd = command.toLowerCase();
+            
+            assistantResponse.style.display = 'block';
+            
+            // أوامر الإضافة
+            if (lowerCmd.includes('اضف طلب') || lowerCmd.includes('add order')) {
+                orders.push({ 
+                    customer: lang === 'ar' ? 'زبون جديد' : 'New Customer', 
+                    invoice: '0', 
+                    charge: '0', 
+                    exchange: '0', 
+                    vegetable: '0',
+                    delivery: deliveries.length > 0 ? deliveries[0] : '', 
+                    paid: false 
+                });
+                saveOrders();
+                renderOrders();
+                assistantResponse.textContent = lang === 'ar' ? '✅ تم إضافة طلب جديد' : '✅ New order added';
+            }
+            
+            // أوامر المسح
+            else if (lowerCmd.includes('امسح الكل') || lowerCmd.includes('clear all')) {
+                if (confirm(lang === 'ar' ? 'هل أنت متأكد؟' : 'Are you sure?')) {
+                    orders = [];
+                    saveOrders();
+                    renderOrders();
+                    assistantResponse.textContent = lang === 'ar' ? '✅ تم مسح جميع البيانات' : '✅ All data cleared';
+                }
+            }
+            
+            // أوامر الإحصائيات
+            else if (lowerCmd.includes('احصائيات') || lowerCmd.includes('statistics') || lowerCmd.includes('stats')) {
+                let total = 0;
+                orders.forEach(o => total += parseFloat(o.invoice) || 0);
+                assistantResponse.textContent = lang === 'ar' 
+                    ? `📊 عدد الفواتير: ${orders.length} - الإجمالي: ${total.toLocaleString()} ل.ل`
+                    : `📊 Invoices: ${orders.length} - Total: ${total.toLocaleString()} L.L`;
+            }
+            
+            // أوامر المساعدة
+            else if (lowerCmd.includes('مساعدة') || lowerCmd.includes('help')) {
+                assistantResponse.textContent = lang === 'ar'
+                    ? 'الأوامر المتاحة: اضف طلب - امسح الكل - احصائيات - سعر الصرف [القيمة] - بحث [النص]'
+                    : 'Available commands: add order - clear all - statistics - set rate [value] - search [text]';
+            }
+            
+            // أوامر سعر الصرف
+            else if (lowerCmd.includes('سعر الصرف') || lowerCmd.includes('set rate')) {
+                const match = lowerCmd.match(/\d+/);
+                if (match) {
+                    dollarRate = parseInt(match[0]);
+                    dollarRateInput.value = dollarRate;
+                    localStorage.setItem(STORAGE_KEYS.RATE, dollarRate);
+                    assistantResponse.textContent = lang === 'ar' 
+                        ? `💰 تم تعيين سعر الصرف: ${dollarRate}`
+                        : `💰 Rate set to: ${dollarRate}`;
+                }
+            }
+            
+            // أوامر البحث
+            else if (lowerCmd.includes('بحث') || lowerCmd.includes('search')) {
+                const searchTerm = command.replace(/بحث|search/i, '').trim();
+                filterText = searchTerm.toLowerCase();
+                searchInput.value = searchTerm;
+                renderOrders();
+                assistantResponse.textContent = lang === 'ar'
+                    ? `🔍 جاري البحث عن: ${searchTerm}`
+                    : `🔍 Searching for: ${searchTerm}`;
+            }
+            
+            else {
+                assistantResponse.textContent = lang === 'ar'
+                    ? '❌ الأمر غير معروف. اكتب "مساعدة" لمعرفة الأوامر'
+                    : '❌ Unknown command. Type "help" for available commands';
+            }
+            
+            // إخفاء الرد بعد 5 ثواني
+            setTimeout(() => {
+                assistantResponse.style.display = 'none';
+            }, 5000);
+        }
+
+        assistantSendBtn.addEventListener('click', () => {
+            const command = assistantInput.value.trim();
+            if (command) {
+                processAssistantCommand(command);
+                assistantInput.value = '';
+            }
+        });
+
+        assistantInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                assistantSendBtn.click();
+            }
+        });
+
+        // التعرف على الصوت
+        if (recognition) {
+            assistantMicBtn.addEventListener('click', () => {
+                assistantMicBtn.classList.add('listening');
+                recognition.start();
+            });
+
+            recognition.onresult = (event) => {
+                const command = event.results[0][0].transcript;
+                assistantInput.value = command;
+                processAssistantCommand(command);
+                assistantMicBtn.classList.remove('listening');
+            };
+
+            recognition.onerror = () => {
+                assistantMicBtn.classList.remove('listening');
+                const lang = document.documentElement.getAttribute('data-lang');
+                alert(lang === 'ar' ? '❌ خطأ في التعرف على الصوت' : '❌ Speech recognition error');
+            };
+
+            recognition.onend = () => {
+                assistantMicBtn.classList.remove('listening');
+            };
+        } else {
+            assistantMicBtn.style.opacity = '0.5';
+            assistantMicBtn.title = 'التعرف على الصوت غير مدعوم في هذا المتصفح';
+        }
+
+        // ================== تهيئة ==================
+        function init() {
+            const storedLang = localStorage.getItem(STORAGE_KEYS.LANG) || 'ar';
+            const storedTheme = localStorage.getItem(STORAGE_KEYS.THEME) || 'light';
+            applyLanguage(storedLang);
+            setTheme(storedTheme);
+            
+            const storedAuth = localStorage.getItem(STORAGE_KEYS.AUTH);
+            if (storedAuth === 'true') {
+                loginScreen.style.display = 'none';
+                mainDashboard.style.display = 'block';
+                loadData();
+            } else {
+                loginScreen.style.display = 'flex';
+                mainDashboard.style.display = 'none';
+            }
+        }
+        
+        init();
+    })();
+</script>
+</body>
+</html>
