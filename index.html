@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Chart.js للرسوم البيانية -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- SheetJS لإنشاء ملفات Excel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -235,6 +237,13 @@
             box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
         }
 
+        .demo-hint {
+            margin-top: 1rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
         /* الشريط العلوي */
         .glass-card {
             background: var(--bg-card);
@@ -337,6 +346,21 @@
 
         .cashier-section i {
             color: var(--icon);
+        }
+
+        .handover-btn {
+            background: var(--success);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .handover-btn:hover {
+            transform: scale(1.1);
         }
 
         /* المساعد الذكي */
@@ -453,6 +477,14 @@
             border-radius: 50px;
         }
 
+        .month-selector select {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-weight: 600;
+            padding: 0.3rem;
+        }
+
         /* شريط الإحصائيات */
         .stats-bar {
             background: var(--bg-card);
@@ -529,6 +561,21 @@
 
         .search-box i {
             color: var(--icon);
+        }
+
+        .delivery-add {
+            display: flex;
+            gap: 0.5rem;
+            flex: 1 1 250px;
+        }
+
+        .delivery-add input {
+            flex: 1;
+            background: var(--input-bg);
+            border: 2px solid var(--border);
+            border-radius: 50px;
+            padding: 0.7rem 1rem;
+            color: var(--text-primary);
         }
 
         /* جولة اليوم - تصميم جديد */
@@ -784,6 +831,45 @@
             border: 2px solid var(--success);
         }
 
+        /* قائمة التصدير المنسدلة */
+        .export-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .export-dropdown-content {
+            display: none;
+            position: absolute;
+            background: var(--bg-card);
+            min-width: 200px;
+            box-shadow: var(--shadow);
+            border-radius: 20px;
+            padding: 0.5rem;
+            z-index: 1;
+            border: 2px solid var(--accent);
+            top: 100%;
+            left: 0;
+        }
+
+        .export-dropdown-content .btn {
+            display: flex;
+            width: 100%;
+            margin: 0.2rem 0;
+            border: none;
+            background: transparent;
+            color: var(--text-primary);
+            text-align: right;
+        }
+
+        .export-dropdown-content .btn:hover {
+            background: var(--accent);
+            color: black;
+        }
+
+        .export-dropdown:hover .export-dropdown-content {
+            display: block;
+        }
+
         /* تحسينات للغة الإنجليزية */
         html[data-lang="en"] th,
         html[data-lang="en"] td,
@@ -925,9 +1011,17 @@
                 <i class="fas fa-chart-pie"></i> <span data-lang-ar="إحصائيات متقدمة" data-lang-en="Advanced Stats">إحصائيات متقدمة</span>
             </button>
             
-            <button class="btn btn-success" id="exportToSheetsBtn">
-                <i class="fas fa-file-excel"></i> <span data-lang-ar="تصدير للغوغل شيت" data-lang-en="Export to Sheets">تصدير للغوغل شيت</span>
-            </button>
+            <!-- قائمة التصدير المنسدلة -->
+            <div class="export-dropdown">
+                <button class="btn btn-success" id="exportDropdownBtn">
+                    <i class="fas fa-download"></i> <span data-lang-ar="تصدير" data-lang-en="Export">تصدير</span> <i class="fas fa-caret-down"></i>
+                </button>
+                <div class="export-dropdown-content" id="exportDropdownContent">
+                    <button class="btn" id="exportCSVBtn"><i class="fas fa-file-csv"></i> CSV</button>
+                    <button class="btn" id="exportExcelBtn"><i class="fas fa-file-excel"></i> Excel</button>
+                    <button class="btn" id="exportGoogleSheetBtn"><i class="fab fa-google"></i> Google Sheets</button>
+                </div>
+            </div>
         </div>
 
         <!-- شريط الإحصائيات -->
@@ -1175,8 +1269,10 @@
         const vegetableTableBody = document.getElementById('vegetableTableBody');
         const totalVegetableModal = document.getElementById('totalVegetableModal');
         
-        // عنصر التصدير
-        const exportToSheetsBtn = document.getElementById('exportToSheetsBtn');
+        // عناصر التصدير
+        const exportCSVBtn = document.getElementById('exportCSVBtn');
+        const exportExcelBtn = document.getElementById('exportExcelBtn');
+        const exportGoogleSheetBtn = document.getElementById('exportGoogleSheetBtn');
 
         // ================== دوال الوقت والتاريخ ==================
         function updateDateTime() {
@@ -1230,15 +1326,6 @@
         function setTheme(theme) {
             document.documentElement.setAttribute('data-theme', theme);
             localStorage.setItem(STORAGE_KEYS.THEME, theme);
-            
-            const icons = document.querySelectorAll('i');
-            icons.forEach(icon => {
-                if (theme === 'light') {
-                    icon.style.color = 'var(--icon-light)';
-                } else {
-                    icon.style.color = 'var(--icon-dark)';
-                }
-            });
             
             themeToggle.innerHTML = theme === 'light' 
                 ? '<i class="fas fa-moon"></i> ' + (document.documentElement.getAttribute('data-lang') === 'ar' ? 'السمة' : 'Theme')
@@ -1926,23 +2013,26 @@
             vegetableModal.style.display = 'none';
         });
 
-        // ================== التصدير للغوغل شيت ==================
-        function exportToGoogleSheets() {
+        // ================== دوال التصدير المتعددة ==================
+        
+        // دالة لإنشاء مصفوفة البيانات للتصدير
+        function getExportData() {
             const lang = document.documentElement.getAttribute('data-lang');
+            const data = [];
             
-            let csvContent = "data:text/csv;charset=utf-8,";
+            // عنوان التقرير
+            data.push([lang === 'ar' ? 'تقرير ترصيد' : 'Balance Report', new Date().toLocaleDateString(lang === 'ar' ? 'ar-LB' : 'en-US')]);
+            data.push([lang === 'ar' ? 'الكاشير' : 'Cashier', currentCashier]);
+            data.push([]);
             
-            const today = new Date().toLocaleDateString(lang === 'ar' ? 'ar-LB' : 'en-US');
-            csvContent += lang === 'ar' ? `تقرير ترصيد,${today}\n` : `Balance Report,${today}\n`;
-            csvContent += lang === 'ar' ? "الكاشير," + currentCashier + "\n" : "Cashier," + currentCashier + "\n";
-            csvContent += "\n";
-            
+            // رؤوس الأعمدة
             if (lang === 'ar') {
-                csvContent += "التاريخ,الزبون,قيمة الفاتورة,الشارج,بعد الشارج,صرافة $,قيمة الخضرة,الدلفري,تم الدفع\n";
+                data.push(['التاريخ', 'الزبون', 'قيمة الفاتورة', 'الشارج', 'بعد الشارج', 'صرافة $', 'قيمة الخضرة', 'الدلفري', 'تم الدفع']);
             } else {
-                csvContent += "Date,Customer,Invoice Amount,Charge,After Charge,Exchange $,Vegetable Value,Delivery,Paid\n";
+                data.push(['Date', 'Customer', 'Invoice Amount', 'Charge', 'After Charge', 'Exchange $', 'Vegetable Value', 'Delivery', 'Paid']);
             }
             
+            // البيانات
             orders.forEach(order => {
                 const afterCharge = calculateAfterCharge(order.invoice, order.charge);
                 const row = [
@@ -1956,9 +2046,11 @@
                     order.delivery || '',
                     order.paid ? (lang === 'ar' ? 'نعم' : 'Yes') : (lang === 'ar' ? 'لا' : 'No')
                 ];
-                csvContent += row.join(",") + "\n";
+                data.push(row);
             });
             
+            // الملخص
+            data.push([]);
             let totalSales = 0;
             let totalCharge = 0;
             let totalVegetable = 0;
@@ -1969,37 +2061,128 @@
                 totalVegetable += parseFloat(order.vegetable) || 0;
             });
             
-            csvContent += "\n";
-            csvContent += lang === 'ar' ? "الملخص,\n" : "Summary,\n";
-            csvContent += lang === 'ar' ? `إجمالي الفواتير,${orders.length}\n` : `Total Invoices,${orders.length}\n`;
-            csvContent += lang === 'ar' ? `إجمالي المبيعات,${totalSales} ل.ل\n` : `Total Sales,${totalSales} L.L\n`;
-            csvContent += lang === 'ar' ? `إجمالي الشارج,${totalCharge} ل.ل\n` : `Total Charge,${totalCharge} L.L\n`;
-            csvContent += lang === 'ar' ? `إجمالي الخضرة,${totalVegetable}\n` : `Total Vegetable,${totalVegetable}\n`;
-            csvContent += lang === 'ar' ? `الصافي (بدون شارج),${totalSales - totalCharge} ل.ل\n` : `Net (No Charge),${totalSales - totalCharge} L.L\n`;
+            data.push([lang === 'ar' ? 'الملخص' : 'Summary', '']);
+            data.push([lang === 'ar' ? 'إجمالي الفواتير' : 'Total Invoices', orders.length]);
+            data.push([lang === 'ar' ? 'إجمالي المبيعات' : 'Total Sales', totalSales + (lang === 'ar' ? ' ل.ل' : ' L.L')]);
+            data.push([lang === 'ar' ? 'إجمالي الشارج' : 'Total Charge', totalCharge + (lang === 'ar' ? ' ل.ل' : ' L.L')]);
+            data.push([lang === 'ar' ? 'إجمالي الخضرة' : 'Total Vegetable', totalVegetable]);
+            data.push([lang === 'ar' ? 'الصافي (بدون شارج)' : 'Net (No Charge)', (totalSales - totalCharge) + (lang === 'ar' ? ' ل.ل' : ' L.L')]);
+            
+            return data;
+        }
+
+        // تصدير CSV
+        function exportToCSV() {
+            const lang = document.documentElement.getAttribute('data-lang');
+            const data = getExportData();
+            
+            let csvContent = "data:text/csv;charset=utf-8,";
+            
+            data.forEach(row => {
+                csvContent += row.join(",") + "\n";
+            });
             
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `ترصيد_${currentCashier}_${today}.csv`);
+            link.setAttribute("download", `ترصيد_${currentCashier}_${new Date().toISOString().split('T')[0]}.csv`);
             document.body.appendChild(link);
             
             link.click();
             document.body.removeChild(link);
             
             document.getElementById('statusMessage').innerText = lang === 'ar' 
-                ? '✅ تم تصدير الملف بنجاح' 
-                : '✅ File exported successfully';
+                ? '✅ تم تصدير CSV بنجاح' 
+                : '✅ CSV exported successfully';
         }
 
-        exportToSheetsBtn.addEventListener('click', exportToGoogleSheets);
+        // تصدير Excel
+        function exportToExcel() {
+            const lang = document.documentElement.getAttribute('data-lang');
+            const data = getExportData();
+            
+            // إنشاء ورقة عمل
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.aoa_to_sheet(data);
+            
+            // إضافة الورقة إلى المصنف
+            XLSX.utils.book_append_sheet(wb, ws, lang === 'ar' ? 'ترصيد' : 'Balance');
+            
+            // تصدير الملف
+            XLSX.writeFile(wb, `ترصيد_${currentCashier}_${new Date().toISOString().split('T')[0]}.xlsx`);
+            
+            document.getElementById('statusMessage').innerText = lang === 'ar' 
+                ? '✅ تم تصدير Excel بنجاح' 
+                : '✅ Excel exported successfully';
+        }
 
-        // ================== إغلاق النوافذ عند الضغط خارجها ==================
+        // تصدير والذهاب إلى Google Sheets
+        function exportToGoogleSheets() {
+            const lang = document.documentElement.getAttribute('data-lang');
+            const data = getExportData();
+            
+            // تحويل البيانات إلى CSV
+            let csvContent = "";
+            data.forEach(row => {
+                csvContent += row.join(",") + "\n";
+            });
+            
+            // تشفير المحتوى
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            
+            // فتح Google Sheets في نافذة جديدة مع تعليمات
+            window.open('https://sheets.google.com/create', '_blank');
+            
+            // رسالة للمستخدم
+            alert(lang === 'ar' 
+                ? '📋 تم نسخ البيانات للحافظة. يمكنك لصقها في Google Sheets (Ctrl+V)' 
+                : '📋 Data copied to clipboard. You can paste it in Google Sheets (Ctrl+V)');
+            
+            // نسخ البيانات إلى الحافظة
+            navigator.clipboard.writeText(csvContent).then(() => {
+                document.getElementById('statusMessage').innerText = lang === 'ar' 
+                    ? '✅ تم نسخ البيانات، يمكنك لصقها في Google Sheets' 
+                    : '✅ Data copied, you can paste it in Google Sheets';
+            }).catch(() => {
+                document.getElementById('statusMessage').innerText = lang === 'ar' 
+                    ? '⚠️ فشل النسخ، يمكنك حفظ الملف ورفعه' 
+                    : '⚠️ Copy failed, you can save and upload the file';
+            });
+            
+            // إنشاء رابط تحميل كنسخة احتياطية
+            const link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", `ترصيد_${currentCashier}_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        // ربط أزرار التصدير
+        exportCSVBtn.addEventListener('click', exportToCSV);
+        exportExcelBtn.addEventListener('click', exportToExcel);
+        exportGoogleSheetBtn.addEventListener('click', exportToGoogleSheets);
+
+        // إغلاق النوافذ عند الضغط خارجها
         window.addEventListener('click', (e) => {
             if (e.target === advancedStatsModal) {
                 advancedStatsModal.style.display = 'none';
             }
             if (e.target === vegetableModal) {
                 vegetableModal.style.display = 'none';
+            }
+        });
+
+        // إغلاق قائمة التصدير عند النقر خارجها
+        document.addEventListener('click', (e) => {
+            const dropdown = document.querySelector('.export-dropdown');
+            const dropdownContent = document.getElementById('exportDropdownContent');
+            if (!dropdown.contains(e.target)) {
+                dropdownContent.style.display = 'none';
+            } else {
+                dropdownContent.style.display = 'block';
             }
         });
 
