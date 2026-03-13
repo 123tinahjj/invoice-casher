@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="ar" data-theme="light" data-lang="ar">
 <head>
@@ -39,6 +41,7 @@
             --shadow-light: 0 10px 40px rgba(0, 0, 0, 0.1);
             --row-paid-light: #d4edda;
             --row-pending-light: #fff3cd;
+            --row-cancelled-light: #f8d7da;
             --icon-light: #1a1a1a;
             --icon-hover-light: #d4af37;
             
@@ -60,6 +63,7 @@
             --shadow-dark: 0 10px 40px rgba(0, 0, 0, 0.5);
             --row-paid-dark: #1e3a2e;
             --row-pending-dark: #4a3b1a;
+            --row-cancelled-dark: #5a2e2e;
             --icon-dark: #ffffff;
             --icon-hover-dark: #d4af37;
         }
@@ -82,6 +86,7 @@
             --shadow: var(--shadow-light);
             --row-paid: var(--row-paid-light);
             --row-pending: var(--row-pending-light);
+            --row-cancelled: var(--row-cancelled-light);
             --icon: var(--icon-light);
             --icon-hover: var(--icon-hover-light);
         }
@@ -104,6 +109,7 @@
             --shadow: var(--shadow-dark);
             --row-paid: var(--row-paid-dark);
             --row-pending: var(--row-pending-dark);
+            --row-cancelled: var(--row-cancelled-dark);
             --icon: var(--icon-dark);
             --icon-hover: var(--icon-hover-dark);
         }
@@ -319,6 +325,18 @@
             color: white;
         }
 
+        .btn-warning {
+            background: var(--warning);
+            border-color: var(--warning);
+            color: black;
+        }
+
+        .btn-secondary {
+            background: var(--text-muted);
+            border-color: var(--text-muted);
+            color: white;
+        }
+
         /* قسم الكاشير */
         .cashier-section {
             display: flex;
@@ -485,7 +503,7 @@
             padding: 0.3rem;
         }
 
-        /* شريط الإحصائيات */
+        /* شريط الإحصائيات المطوّر */
         .stats-bar {
             background: var(--bg-card);
             border-radius: 30px;
@@ -517,6 +535,21 @@
             border-radius: 50px;
         }
 
+        .stat-badge-paid {
+            background: var(--success);
+            color: white;
+        }
+
+        .stat-badge-unpaid {
+            background: var(--warning);
+            color: black;
+        }
+
+        .stat-badge-cancelled {
+            background: var(--danger);
+            color: white;
+        }
+
         .rate-input {
             background: rgba(212, 175, 55, 0.1);
             border: 2px solid var(--border);
@@ -527,7 +560,7 @@
             width: 120px;
         }
 
-        /* شريط البحث وتحديد اليوم */
+        /* شريط البحث وتحديد اليوم وحساب الدليفري */
         .search-row {
             display: flex;
             flex-wrap: wrap;
@@ -561,6 +594,42 @@
 
         .search-box i {
             color: var(--icon);
+        }
+
+        .delivery-search {
+            background: var(--bg-card);
+            border: 2px solid var(--warning);
+            border-radius: 50px;
+            padding: 0.7rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex: 1 1 250px;
+        }
+
+        .delivery-search input {
+            background: transparent;
+            border: none;
+            width: 100%;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        .delivery-search input:focus {
+            outline: none;
+        }
+
+        .delivery-search i {
+            color: var(--warning);
+        }
+
+        .delivery-total {
+            background: var(--warning);
+            color: black;
+            font-weight: 700;
+            padding: 0.4rem 1.2rem;
+            border-radius: 50px;
+            white-space: nowrap;
         }
 
         .delivery-add {
@@ -626,7 +695,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 1400px;
+            min-width: 1500px;
         }
 
         th {
@@ -645,6 +714,12 @@
 
         tr.paid-row {
             background: var(--row-paid) !important;
+        }
+
+        tr.cancelled-row {
+            background: var(--row-cancelled) !important;
+            text-decoration: line-through;
+            opacity: 0.7;
         }
 
         tr:hover {
@@ -714,6 +789,44 @@
 
         .btn-icon:hover i {
             color: white;
+        }
+
+        .btn-icon-success {
+            background: transparent;
+            border: 2px solid var(--success);
+            border-radius: 12px;
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--success);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-icon-success:hover {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-icon-warning {
+            background: transparent;
+            border: 2px solid var(--warning);
+            border-radius: 12px;
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--warning);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-icon-warning:hover {
+            background: var(--warning);
+            color: black;
         }
 
         /* قسم التسليم */
@@ -870,6 +983,39 @@
             display: block;
         }
 
+        /* Payment method buttons */
+        .payment-methods {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .payment-btn {
+            background: transparent;
+            border: 2px solid var(--border);
+            border-radius: 15px;
+            padding: 0.4rem 1rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .payment-btn.active {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        .payment-btn.cash.active {
+            background: var(--success);
+        }
+
+        .payment-btn.visa.active {
+            background: var(--info);
+        }
+
         /* تحسينات للغة الإنجليزية */
         html[data-lang="en"] th,
         html[data-lang="en"] td,
@@ -1024,29 +1170,41 @@
             </div>
         </div>
 
-        <!-- شريط الإحصائيات -->
+        <!-- شريط الإحصائيات المطوّر (يظهر 3 قيم جديدة) -->
         <div class="stats-bar">
-            <div class="stat-item"><i class="fas fa-file-invoice"></i> <span data-lang-ar="الفواتير:" data-lang-en="Invoices:">الفواتير:</span> <span class="stat-badge" id="totalInvoicesCount">0</span></div>
-            <div class="stat-item"><i class="fas fa-dollar-sign"></i> <span data-lang-ar="إجمالي القيمة:" data-lang-en="Total:">إجمالي القيمة:</span> <span class="stat-badge" id="totalInvoicesSum">0</span></div>
-            <div class="stat-item"><i class="fas fa-leaf"></i> <span data-lang-ar="إجمالي الخضرة:" data-lang-en="Total Vegetable:">إجمالي الخضرة:</span> <span class="stat-badge" id="totalVegetableSum">0</span></div>
-            <div class="stat-item"><i class="fas fa-truck"></i> <span data-lang-ar="إجمالي الشارج:" data-lang-en="Total Charge:">إجمالي الشارج:</span> <span class="stat-badge" id="totalChargeSum">0</span></div>
-            <div class="stat-item"><i class="fas fa-money-bill-wave"></i> <span data-lang-ar="صرف الدولار:" data-lang-en="USD Rate:">صرف الدولار:</span> <input type="number" id="dollarRate" value="90000" step="1000" class="rate-input"></div>
+            <div class="stat-item"><i class="fas fa-file-invoice"></i> <span data-lang-ar="إجمالي الفواتير:" data-lang-en="Total Invoices:">إجمالي الفواتير:</span> <span class="stat-badge" id="totalInvoicesCount">0</span></div>
+            <div class="stat-item"><i class="fas fa-check-circle" style="color: var(--success);"></i> <span data-lang-ar="المدفوع:" data-lang-en="Paid:">المدفوع:</span> <span class="stat-badge stat-badge-paid" id="totalPaidSum">0</span></div>
+            <div class="stat-item"><i class="fas fa-clock" style="color: var(--warning);"></i> <span data-lang-ar="غير مدفوع:" data-lang-en="Unpaid:">غير مدفوع:</span> <span class="stat-badge stat-badge-unpaid" id="totalUnpaidSum">0</span></div>
+            <div class="stat-item"><i class="fas fa-times-circle" style="color: var(--danger);"></i> <span data-lang-ar="ملغي/مرتجع:" data-lang-en="Cancelled:">ملغي/مرتجع:</span> <span class="stat-badge stat-badge-cancelled" id="totalCancelledSum">0</span></div>
+            <div class="stat-item"><i class="fas fa-dollar-sign"></i> <span data-lang-ar="صرف الدولار:" data-lang-en="USD Rate:">صرف الدولار:</span> <input type="number" id="dollarRate" value="90000" step="1000" class="rate-input"></div>
         </div>
 
-        <!-- شريط البحث وإضافة الدلفري -->
+        <!-- شريط البحث عن الدليفري وإضافة دليفري جديد -->
         <div class="search-row">
-            <div class="search-box">
-                <i class="fas fa-search"></i>
-                <input type="text" id="searchInput" placeholder="ابحث باسم الزبون أو رقم الطلبية أو الدلفري ...">
+            <!-- بحث الدليفري -->
+            <div class="delivery-search">
+                <i class="fas fa-truck"></i>
+                <input type="text" id="deliverySearchInput" placeholder="ابحث باسم الدليفري لحساب مستحقاته (غير المحاسب)">
+                <span class="delivery-total" id="deliveryUnpaidTotal">0 ل.ل</span>
             </div>
-            
+
+            <!-- إضافة دليفري جديد -->
             <div class="delivery-add">
                 <input type="text" id="newDeliveryName" placeholder="اسم دلفري جديد">
                 <button class="btn" id="addDeliveryBtn" style="border-radius: 50px; padding: 0.5rem 1.2rem;"><i class="fas fa-plus"></i> <span data-lang-ar="إضافة" data-lang-en="Add">إضافة</span></button>
             </div>
-            
+
+            <!-- تاريخ الطلب -->
             <div style="display: flex; gap: 0.5rem;">
                 <input type="date" id="orderDate" style="width: 150px;">
+            </div>
+        </div>
+
+        <!-- شريط البحث العام -->
+        <div class="search-row">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="ابحث باسم الزبون أو رقم الطلبية ...">
             </div>
         </div>
 
@@ -1064,7 +1222,9 @@
                         <th data-lang-ar="صرافة $" data-lang-en="Exchange $">صرافة $</th>
                         <th data-lang-ar="قيمة الخضرة" data-lang-en="Vegetable Value">قيمة الخضرة</th>
                         <th data-lang-ar="الدلفري" data-lang-en="Delivery">الدلفري</th>
+                        <th data-lang-ar="طريقة الدفع" data-lang-en="Payment Method">طريقة الدفع</th>
                         <th data-lang-ar="تم الدفع" data-lang-en="Paid">تم الدفع</th>
+                        <th data-lang-ar="مرتجع" data-lang-en="Returned">مرتجع</th>
                         <th data-lang-ar="حذف" data-lang-en="Delete">حذف</th>
                     </tr>
                 </thead>
@@ -1110,9 +1270,19 @@
                     <div class="value" id="statTotalInvoices">0</div>
                 </div>
                 <div class="stat-card">
-                    <i class="fas fa-dollar-sign"></i>
-                    <h3 data-lang-ar="إجمالي المبيعات" data-lang-en="Total Sales">إجمالي المبيعات</h3>
-                    <div class="value" id="statTotalSales">0 ل.ل</div>
+                    <i class="fas fa-check-circle" style="color: var(--success);"></i>
+                    <h3 data-lang-ar="المدفوع" data-lang-en="Paid">المدفوع</h3>
+                    <div class="value" id="statTotalPaid">0 ل.ل</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-clock" style="color: var(--warning);"></i>
+                    <h3 data-lang-ar="غير مدفوع" data-lang-en="Unpaid">غير مدفوع</h3>
+                    <div class="value" id="statTotalUnpaid">0 ل.ل</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-times-circle" style="color: var(--danger);"></i>
+                    <h3 data-lang-ar="ملغي/مرتجع" data-lang-en="Cancelled">ملغي/مرتجع</h3>
+                    <div class="value" id="statTotalCancelled">0 ل.ل</div>
                 </div>
                 <div class="stat-card">
                     <i class="fas fa-truck"></i>
@@ -1123,16 +1293,6 @@
                     <i class="fas fa-leaf"></i>
                     <h3 data-lang-ar="إجمالي الخضرة" data-lang-en="Total Vegetable">إجمالي الخضرة</h3>
                     <div class="value" id="statTotalVegetable">0</div>
-                </div>
-                <div class="stat-card">
-                    <i class="fas fa-hand-holding-usd"></i>
-                    <h3 data-lang-ar="الصافي (بدون شارج)" data-lang-en="Net (No Charge)">الصافي (بدون شارج)</h3>
-                    <div class="value" id="statNetWithoutCharge">0 ل.ل</div>
-                </div>
-                <div class="stat-card">
-                    <i class="fas fa-percent"></i>
-                    <h3 data-lang-ar="متوسط الفاتورة" data-lang-en="Average Invoice">متوسط الفاتورة</h3>
-                    <div class="value" id="statAverageInvoice">0 ل.ل</div>
                 </div>
             </div>
             
@@ -1179,14 +1339,14 @@
     (function(){
         // ================== الثوابت ==================
         const STORAGE_KEYS = {
-            ORDERS: 'mohasib_v7_orders',
-            DELIVERIES: 'mohasib_v7_deliveries',
-            CASHIERS: 'mohasib_v7_cashiers',
-            RATE: 'mohasib_v7_rate',
-            AUTH: 'mohasib_v7_auth',
-            LANG: 'mohasib_v7_lang',
-            THEME: 'mohasib_v7_theme',
-            CASHIER: 'mohasib_v7_cashier'
+            ORDERS: 'mohasib_v8_orders',
+            DELIVERIES: 'mohasib_v8_deliveries',
+            CASHIERS: 'mohasib_v8_cashiers',
+            RATE: 'mohasib_v8_rate',
+            AUTH: 'mohasib_v8_auth',
+            LANG: 'mohasib_v8_lang',
+            THEME: 'mohasib_v8_theme',
+            CASHIER: 'mohasib_v8_cashier'
         };
         
         const SECRET_CLEAR_CODE = '1234';
@@ -1200,6 +1360,7 @@
         let dollarRate = 90000;
         let isAuthenticated = false;
         let filterText = '';
+        let deliveryFilterText = ''; // للبحث عن الدليفري
         let currentCashier = 'Safiya';
         let currentFilter = 'all'; // all, vegetable, charge
         let selectedMonth = 'all';
@@ -1223,8 +1384,15 @@
         const fileInput = document.getElementById('fileInput');
         const secretCodeInput = document.getElementById('secretCodeInput');
         const searchInput = document.getElementById('searchInput');
+        const deliverySearchInput = document.getElementById('deliverySearchInput');
+        const deliveryUnpaidTotal = document.getElementById('deliveryUnpaidTotal');
+        
+        // عناصر الإحصائيات الجديدة
         const totalInvoicesCountSpan = document.getElementById('totalInvoicesCount');
-        const totalInvoicesSumSpan = document.getElementById('totalInvoicesSum');
+        const totalPaidSumSpan = document.getElementById('totalPaidSum');
+        const totalUnpaidSumSpan = document.getElementById('totalUnpaidSum');
+        const totalCancelledSumSpan = document.getElementById('totalCancelledSum');
+        
         const totalVegetableSumSpan = document.getElementById('totalVegetableSum');
         const totalChargeSumSpan = document.getElementById('totalChargeSum');
         const cashierNameSelect = document.getElementById('cashierNameSelect');
@@ -1257,11 +1425,11 @@
         const closeStatsModal = document.getElementById('closeStatsModal');
         const exportStatsBtn = document.getElementById('exportStatsBtn');
         const statTotalInvoices = document.getElementById('statTotalInvoices');
-        const statTotalSales = document.getElementById('statTotalSales');
+        const statTotalPaid = document.getElementById('statTotalPaid');
+        const statTotalUnpaid = document.getElementById('statTotalUnpaid');
+        const statTotalCancelled = document.getElementById('statTotalCancelled');
         const statTotalCharge = document.getElementById('statTotalCharge');
         const statTotalVegetable = document.getElementById('statTotalVegetable');
-        const statNetWithoutCharge = document.getElementById('statNetWithoutCharge');
-        const statAverageInvoice = document.getElementById('statAverageInvoice');
         
         // عناصر الخضرة
         const vegetableModal = document.getElementById('vegetableModal');
@@ -1405,26 +1573,62 @@
             });
         }
 
-        // ================== الإحصائيات ==================
+        // ================== الإحصائيات المطوّرة ==================
         function updateStats() {
             let totalValue = 0;
+            let totalPaid = 0;
+            let totalUnpaid = 0;
+            let totalCancelled = 0;
             let totalVegetable = 0;
             let totalCharge = 0;
             
             orders.forEach(o => {
-                totalValue += parseFloat(o.invoice) || 0;
+                const invoiceVal = parseFloat(o.invoice) || 0;
+                totalValue += invoiceVal;
                 totalVegetable += parseFloat(o.vegetable) || 0;
                 totalCharge += parseFloat(o.charge) || 0;
+                
+                if (o.cancelled) {
+                    totalCancelled += invoiceVal;
+                } else if (o.paid) {
+                    totalPaid += invoiceVal;
+                } else {
+                    totalUnpaid += invoiceVal;
+                }
             });
             
             totalInvoicesCountSpan.innerText = orders.length;
-            totalInvoicesSumSpan.innerText = totalValue.toLocaleString() + ' ل.ل';
+            totalPaidSumSpan.innerText = totalPaid.toLocaleString() + ' ل.ل';
+            totalUnpaidSumSpan.innerText = totalUnpaid.toLocaleString() + ' ل.ل';
+            totalCancelledSumSpan.innerText = totalCancelled.toLocaleString() + ' ل.ل';
             totalVegetableSumSpan.innerText = totalVegetable.toLocaleString();
             totalChargeSumSpan.innerText = totalCharge.toLocaleString() + ' ل.ل';
             
             // تحديث عداد جولة اليوم
             const filtered = filterOrders();
             dayTourCount.innerText = filtered.length;
+            
+            // تحديث حساب الدليفري
+            updateDeliveryUnpaidTotal();
+        }
+
+        // ================== حساب مستحقات الدليفري (غير المحاسب بها) ==================
+        function updateDeliveryUnpaidTotal() {
+            const deliveryName = deliverySearchInput.value.trim();
+            if (!deliveryName) {
+                deliveryUnpaidTotal.innerText = '0 ل.ل';
+                return;
+            }
+            
+            let total = 0;
+            orders.forEach(order => {
+                // نأخذ الطلبيات التي لها هذا الدليفري، غير مدفوعة وغير ملغية
+                if (order.delivery === deliveryName && !order.paid && !order.cancelled) {
+                    total += parseFloat(order.invoice) || 0;
+                }
+            });
+            
+            deliveryUnpaidTotal.innerText = total.toLocaleString() + ' ل.ل';
         }
 
         // ================== حساب بعد الشارج ==================
@@ -1440,8 +1644,7 @@
                 // تصفية النص
                 if (filterText) {
                     const customerMatch = (order.customer || '').toLowerCase().includes(filterText);
-                    const deliveryMatch = (order.delivery || '').toLowerCase().includes(filterText);
-                    if (!customerMatch && !deliveryMatch) return false;
+                    if (!customerMatch) return false;
                 }
                 
                 // تصفية النوع
@@ -1476,6 +1679,7 @@
                 const originalIndex = orders.findIndex(o => o === order);
                 const tr = document.createElement('tr');
                 if (order.paid) tr.classList.add('paid-row');
+                if (order.cancelled) tr.classList.add('cancelled-row');
 
                 const invoiceVal = parseFloat(order.invoice) || 0;
                 const chargeVal = parseFloat(order.charge) || 0;
@@ -1497,7 +1701,14 @@
                             ${deliveries.map(d => `<option value="${d}" ${order.delivery === d ? 'selected' : ''}>${d}</option>`).join('')}
                         </select>
                     </td>
+                    <td>
+                        <div class="payment-methods">
+                            <button class="payment-btn cash ${order.paymentMethod === 'cash' ? 'active' : ''}" data-index="${originalIndex}" data-method="cash">كاش</button>
+                            <button class="payment-btn visa ${order.paymentMethod === 'visa' ? 'active' : ''}" data-index="${originalIndex}" data-method="visa">فيزا</button>
+                        </div>
+                    </td>
                     <td><input type="checkbox" class="order-paid" data-index="${originalIndex}" ${order.paid ? 'checked' : ''}></td>
+                    <td><button class="btn-icon-warning cancel-row-btn" data-index="${originalIndex}" title="${order.cancelled ? 'إلغاء المرتجع' : 'مرتجع'}"><i class="fas ${order.cancelled ? 'fa-undo' : 'fa-times'}"></i></button></td>
                     <td><button class="btn-icon delete-row-btn" data-index="${originalIndex}"><i class="fas fa-trash"></i></button></td>
                 `;
                 tbody.appendChild(tr);
@@ -1563,6 +1774,7 @@
                     const idx = this.dataset.index;
                     orders[idx].delivery = this.value;
                     saveOrders(); renderOrders();
+                    updateDeliveryUnpaidTotal();
                 });
             });
             
@@ -1571,6 +1783,44 @@
                     const idx = this.dataset.index;
                     orders[idx].paid = this.checked;
                     saveOrders(); renderOrders();
+                    updateDeliveryUnpaidTotal();
+                });
+            });
+            
+            // أزرار طريقة الدفع
+            document.querySelectorAll('.payment-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const idx = this.dataset.index;
+                    const method = this.dataset.method;
+                    
+                    // إزالة active من كل الأزرار في هذا الصف
+                    const parent = this.parentElement;
+                    parent.querySelectorAll('.payment-btn').forEach(b => b.classList.remove('active'));
+                    
+                    // إضافة active للزر المضغوط
+                    this.classList.add('active');
+                    
+                    // حفظ طريقة الدفع
+                    orders[idx].paymentMethod = method;
+                    saveOrders();
+                });
+            });
+            
+            // أزرار المرتجع
+            document.querySelectorAll('.cancel-row-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    const idx = this.dataset.index;
+                    const lang = document.documentElement.getAttribute('data-lang');
+                    
+                    if(confirm(lang === 'ar' ? 'هل أنت متأكد من تحديد هذه الفاتورة كمرتجع/ملغية؟' : 'Are you sure you want to mark this invoice as cancelled/returned?')) {
+                        orders[idx].cancelled = !orders[idx].cancelled;
+                        if (orders[idx].cancelled) {
+                            orders[idx].paid = false; // إذا كانت ملغية، لا يمكن أن تكون مدفوعة
+                        }
+                        saveOrders();
+                        renderOrders();
+                    }
                 });
             });
             
@@ -1620,7 +1870,9 @@
                 exchange: '', 
                 vegetable: '',
                 delivery: '', 
-                paid: false 
+                paid: false,
+                cancelled: false,
+                paymentMethod: 'cash'
             });
             saveOrders();
             renderOrders();
@@ -1690,7 +1942,7 @@
         handoverBtn.addEventListener('click', () => {
             let total = 0;
             orders.forEach(order => {
-                if(order.paid) {
+                if(order.paid && !order.cancelled) {
                     total += parseFloat(order.invoice) || 0;
                 }
             });
@@ -1706,10 +1958,15 @@
             handoverSection.style.display = 'none';
         });
 
-        // ================== بحث ==================
+        // ================== بحث عام ==================
         searchInput.addEventListener('input', (e) => {
             filterText = e.target.value.trim().toLowerCase();
             renderOrders();
+        });
+
+        // ================== بحث الدليفري ==================
+        deliverySearchInput.addEventListener('input', (e) => {
+            updateDeliveryUnpaidTotal();
         });
 
         // ================== رفع ملف ==================
@@ -1728,7 +1985,9 @@
                         exchange: '20', 
                         vegetable: '',
                         delivery: deliveries.length > 0 ? deliveries[0] : '', 
-                        paid: false 
+                        paid: false,
+                        cancelled: false,
+                        paymentMethod: 'cash'
                     });
                 }
                 saveOrders();
@@ -1748,8 +2007,8 @@
             // أمر المساعدة / كيف أستخدم التطبيق؟
             if (lowerCmd.includes('كيف أستخدم') || lowerCmd.includes('how to use') || lowerCmd.includes('مساعدة') || lowerCmd.includes('help')) {
                 assistantResponse.textContent = lang === 'ar'
-                    ? '📘 يمكنك إضافة طلب بالضغط على "إضافة طلب"، أو استخدام الأوامر الصوتية. اختر كاشير من الأعلى، وصفي الفواتير بالأزرار. لجولة اليوم اختر تاريخاً محدداً.'
-                    : '📘 You can add an order by clicking "Add Order", or use voice commands. Select a cashier above, filter invoices with buttons. For day tour, pick a specific date.';
+                    ? '📘 يمكنك إضافة طلب بالضغط على "إضافة طلب"، أو استخدام الأوامر الصوتية. اختر كاشير من الأعلى، وصفي الفواتير بالأزرار. لجولة اليوم اختر تاريخاً محدداً. يمكنك البحث عن دليفري لمعرفة مستحقاته.'
+                    : '📘 You can add an order by clicking "Add Order", or use voice commands. Select a cashier above, filter invoices with buttons. For day tour, pick a specific date. You can search for a delivery to see their dues.';
             }
             // أوامر الإضافة
             else if (lowerCmd.includes('اضف طلب') || lowerCmd.includes('add order')) {
@@ -1761,7 +2020,9 @@
                     exchange: '0', 
                     vegetable: '0',
                     delivery: deliveries.length > 0 ? deliveries[0] : '', 
-                    paid: false 
+                    paid: false,
+                    cancelled: false,
+                    paymentMethod: 'cash'
                 });
                 saveOrders();
                 renderOrders();
@@ -1779,14 +2040,28 @@
             // أوامر الإحصائيات
             else if (lowerCmd.includes('احصائيات') || lowerCmd.includes('statistics') || lowerCmd.includes('stats')) {
                 let total = 0;
+                let paid = 0;
+                let unpaid = 0;
+                let cancelled = 0;
                 let vegetable = 0;
+                
                 orders.forEach(o => {
-                    total += parseFloat(o.invoice) || 0;
+                    const val = parseFloat(o.invoice) || 0;
+                    total += val;
                     vegetable += parseFloat(o.vegetable) || 0;
+                    
+                    if (o.cancelled) {
+                        cancelled += val;
+                    } else if (o.paid) {
+                        paid += val;
+                    } else {
+                        unpaid += val;
+                    }
                 });
+                
                 assistantResponse.textContent = lang === 'ar' 
-                    ? `📊 الفواتير: ${orders.length} - الإجمالي: ${total.toLocaleString()} ل.ل - الخضرة: ${vegetable.toLocaleString()}`
-                    : `📊 Invoices: ${orders.length} - Total: ${total.toLocaleString()} L.L - Vegetable: ${vegetable.toLocaleString()}`;
+                    ? `📊 الفواتير: ${orders.length} - الإجمالي: ${total.toLocaleString()} ل.ل - المدفوع: ${paid.toLocaleString()} ل.ل - غير مدفوع: ${unpaid.toLocaleString()} ل.ل - ملغي: ${cancelled.toLocaleString()} ل.ل - الخضرة: ${vegetable.toLocaleString()}`
+                    : `📊 Invoices: ${orders.length} - Total: ${total.toLocaleString()} L.L - Paid: ${paid.toLocaleString()} L.L - Unpaid: ${unpaid.toLocaleString()} L.L - Cancelled: ${cancelled.toLocaleString()} L.L - Vegetable: ${vegetable.toLocaleString()}`;
             }
             // أوامر التصدير
             else if (lowerCmd.includes('تصدير') || lowerCmd.includes('export')) {
@@ -1915,24 +2190,33 @@
         function updateAdvancedStats() {
             let totalInvoices = orders.length;
             let totalSales = 0;
+            let totalPaid = 0;
+            let totalUnpaid = 0;
+            let totalCancelled = 0;
             let totalCharge = 0;
             let totalVegetable = 0;
             
             orders.forEach(order => {
-                totalSales += parseFloat(order.invoice) || 0;
+                const val = parseFloat(order.invoice) || 0;
+                totalSales += val;
                 totalCharge += parseFloat(order.charge) || 0;
                 totalVegetable += parseFloat(order.vegetable) || 0;
+                
+                if (order.cancelled) {
+                    totalCancelled += val;
+                } else if (order.paid) {
+                    totalPaid += val;
+                } else {
+                    totalUnpaid += val;
+                }
             });
             
-            let netWithoutCharge = totalSales - totalCharge;
-            let averageInvoice = totalInvoices > 0 ? totalSales / totalInvoices : 0;
-            
             statTotalInvoices.textContent = totalInvoices;
-            statTotalSales.textContent = totalSales.toLocaleString() + ' ل.ل';
+            statTotalPaid.textContent = totalPaid.toLocaleString() + ' ل.ل';
+            statTotalUnpaid.textContent = totalUnpaid.toLocaleString() + ' ل.ل';
+            statTotalCancelled.textContent = totalCancelled.toLocaleString() + ' ل.ل';
             statTotalCharge.textContent = totalCharge.toLocaleString() + ' ل.ل';
             statTotalVegetable.textContent = totalVegetable.toLocaleString();
-            statNetWithoutCharge.textContent = netWithoutCharge.toLocaleString() + ' ل.ل';
-            statAverageInvoice.textContent = averageInvoice.toLocaleString() + ' ل.ل';
             
             if (statsChart) {
                 statsChart.destroy();
@@ -1942,21 +2226,25 @@
             statsChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['المبيعات', 'الشارج', 'الخضرة', 'الصافي'],
+                    labels: ['المبيعات', 'المدفوع', 'غير مدفوع', 'ملغي', 'الشارج', 'الخضرة'],
                     datasets: [{
                         label: 'القيمة',
-                        data: [totalSales, totalCharge, totalVegetable, netWithoutCharge],
+                        data: [totalSales, totalPaid, totalUnpaid, totalCancelled, totalCharge, totalVegetable],
                         backgroundColor: [
                             'rgba(212, 175, 55, 0.8)',
-                            'rgba(220, 53, 69, 0.8)',
                             'rgba(40, 167, 69, 0.8)',
-                            'rgba(23, 162, 184, 0.8)'
+                            'rgba(255, 193, 7, 0.8)',
+                            'rgba(220, 53, 69, 0.8)',
+                            'rgba(23, 162, 184, 0.8)',
+                            'rgba(111, 66, 193, 0.8)'
                         ],
                         borderColor: [
                             '#d4af37',
-                            '#dc3545',
                             '#28a745',
-                            '#17a2b8'
+                            '#ffc107',
+                            '#dc3545',
+                            '#17a2b8',
+                            '#6f42c1'
                         ],
                         borderWidth: 1
                     }]
@@ -1984,7 +2272,7 @@
 
         // ================== نافذة الخضرة ==================
         function showVegetableModal() {
-            const filtered = orders.filter(order => order.vegetable && parseFloat(order.vegetable) > 0);
+            const filtered = orders.filter(order => order.vegetable && parseFloat(order.vegetable) > 0 && !order.cancelled);
             let total = 0;
             
             vegetableTableBody.innerHTML = '';
@@ -2027,9 +2315,9 @@
             
             // رؤوس الأعمدة
             if (lang === 'ar') {
-                data.push(['التاريخ', 'الزبون', 'قيمة الفاتورة', 'الشارج', 'بعد الشارج', 'صرافة $', 'قيمة الخضرة', 'الدلفري', 'تم الدفع']);
+                data.push(['التاريخ', 'الزبون', 'قيمة الفاتورة', 'الشارج', 'بعد الشارج', 'صرافة $', 'قيمة الخضرة', 'الدلفري', 'طريقة الدفع', 'تم الدفع', 'مرتجع']);
             } else {
-                data.push(['Date', 'Customer', 'Invoice Amount', 'Charge', 'After Charge', 'Exchange $', 'Vegetable Value', 'Delivery', 'Paid']);
+                data.push(['Date', 'Customer', 'Invoice Amount', 'Charge', 'After Charge', 'Exchange $', 'Vegetable Value', 'Delivery', 'Payment Method', 'Paid', 'Returned']);
             }
             
             // البيانات
@@ -2044,7 +2332,9 @@
                     order.exchange || '0',
                     order.vegetable || '0',
                     order.delivery || '',
-                    order.paid ? (lang === 'ar' ? 'نعم' : 'Yes') : (lang === 'ar' ? 'لا' : 'No')
+                    order.paymentMethod === 'visa' ? 'فيزا' : 'كاش',
+                    order.paid ? (lang === 'ar' ? 'نعم' : 'Yes') : (lang === 'ar' ? 'لا' : 'No'),
+                    order.cancelled ? (lang === 'ar' ? 'نعم' : 'Yes') : (lang === 'ar' ? 'لا' : 'No')
                 ];
                 data.push(row);
             });
@@ -2052,21 +2342,35 @@
             // الملخص
             data.push([]);
             let totalSales = 0;
+            let totalPaid = 0;
+            let totalUnpaid = 0;
+            let totalCancelled = 0;
             let totalCharge = 0;
             let totalVegetable = 0;
             
             orders.forEach(order => {
-                totalSales += parseFloat(order.invoice) || 0;
+                const val = parseFloat(order.invoice) || 0;
+                totalSales += val;
                 totalCharge += parseFloat(order.charge) || 0;
                 totalVegetable += parseFloat(order.vegetable) || 0;
+                
+                if (order.cancelled) {
+                    totalCancelled += val;
+                } else if (order.paid) {
+                    totalPaid += val;
+                } else {
+                    totalUnpaid += val;
+                }
             });
             
             data.push([lang === 'ar' ? 'الملخص' : 'Summary', '']);
             data.push([lang === 'ar' ? 'إجمالي الفواتير' : 'Total Invoices', orders.length]);
             data.push([lang === 'ar' ? 'إجمالي المبيعات' : 'Total Sales', totalSales + (lang === 'ar' ? ' ل.ل' : ' L.L')]);
+            data.push([lang === 'ar' ? 'المدفوع' : 'Paid', totalPaid + (lang === 'ar' ? ' ل.ل' : ' L.L')]);
+            data.push([lang === 'ar' ? 'غير مدفوع' : 'Unpaid', totalUnpaid + (lang === 'ar' ? ' ل.ل' : ' L.L')]);
+            data.push([lang === 'ar' ? 'ملغي/مرتجع' : 'Cancelled', totalCancelled + (lang === 'ar' ? ' ل.ل' : ' L.L')]);
             data.push([lang === 'ar' ? 'إجمالي الشارج' : 'Total Charge', totalCharge + (lang === 'ar' ? ' ل.ل' : ' L.L')]);
             data.push([lang === 'ar' ? 'إجمالي الخضرة' : 'Total Vegetable', totalVegetable]);
-            data.push([lang === 'ar' ? 'الصافي (بدون شارج)' : 'Net (No Charge)', (totalSales - totalCharge) + (lang === 'ar' ? ' ل.ل' : ' L.L')]);
             
             return data;
         }
